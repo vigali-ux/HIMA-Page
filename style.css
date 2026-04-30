@@ -53,7 +53,8 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;        /* 双重保险：防止水平滚动 */
-  max-width: 100%;
+  max-width: 100vw;
+  width: 100%;
 }
 img { display: block; max-width: 100%; }
 /* scene-canvas 内的图片不受 max-width 限制（画布已做 scale 缩放） */
@@ -1404,7 +1405,7 @@ a { color: inherit; text-decoration: none; }
 /* 私信营销 + 合作游戏 + Footer 共用背景图 */
 .shared-bg-wrap {
   position: relative;
-  background: #ffffff url('assets/第五屏背景.png') top center / 100% 100% no-repeat;
+  background: #ffffff url('assets/第五屏背景.png') top center / cover no-repeat;
 }
 .shared-bg-wrap .scene--light {
   background: transparent;
