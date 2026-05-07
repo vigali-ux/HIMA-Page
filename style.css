@@ -65,14 +65,15 @@ button { border: none; background: none; font-family: inherit; cursor: pointer; 
 a { color: inherit; text-decoration: none; }
 
 /* =========================================================
-   Hero · 严格 Figma 1920×1006 1:1 还原
-   策略：1920×1006 固定画布 + transform: scale(100vw/1920) 等比缩放
+   Hero · 严格 Figma 1920×1030 1:1 还原
+   策略：1920px 固定画布 + zoom: (clientWidth/1920) 等比缩放
+   zoom 比 transform:scale 的优势：自动改变 layout 尺寸，不再需要手动计算高度
    ========================================================= */
 .hero {
   position: relative;
   width: 100%;
   overflow: hidden;
-  height: calc(var(--scale-w) * 1006 / 1920);
+  height: calc(1030px * var(--page-scale, 1));
   /* 浅色渐变兜底：白 → 浅蓝 */
   background: linear-gradient(180deg, #ffffff 0%, #e9f1ff 60%, #dce8ff 100%);
 }
@@ -123,16 +124,15 @@ a { color: inherit; text-decoration: none; }
   100% { transform: scale(1);    opacity: .55; }
 }
 
-/* 1920×1006 固定画布 + 等比缩放 */
+/* 1920×1030 固定画布 + zoom 等比缩放 */
 .hero-canvas {
   position: absolute;
-  top: 0; left: 0;
+  top: 0;
+  left: 50%;
+  margin-left: -960px;
   width: 1920px;
-  height: 1006px;
-  transform-origin: top left;
-  transform: scale(calc(var(--scale-w) / 1920));
-  /* 超宽屏时居中 */
-  margin-left: max(0px, calc((var(--vw) - var(--max-w)) / 2));
+  height: 1030px;
+  zoom: var(--page-scale, 1);
   z-index: 2;
 }
 
@@ -142,18 +142,23 @@ a { color: inherit; text-decoration: none; }
 .hero-nav {
   position: absolute;
   left: 0; top: 0;
-  width: 1920px;
+  width: 100%;
   height: 80px;
   z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 60px;
+  box-sizing: border-box;
 }
 
-/* 品牌 LOGO（左，黑色） */
+/* 品牌 LOGO（左） */
 .nav-brand {
-  position: absolute;
   display: flex;
   align-items: center;
   gap: 10px;
   height: 38px;
+  text-decoration: none;
 }
 .nav-brand-mark {
   width: 39px; height: 38px;
@@ -170,12 +175,9 @@ a { color: inherit; text-decoration: none; }
 
 /* 菜单（Figma x=682, w=496, h=24） */
 .nav-menu {
-  position: absolute;
-  height: 24px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0;
+  gap: 48px;
 }
 .nav-menu .nav-link {
   font-size: 16px;
@@ -198,10 +200,15 @@ a { color: inherit; text-decoration: none; }
 .nav-menu .nav-link:hover { color: #0165F2; }
 .nav-menu .nav-link:hover::after { width: 100%; }
 
+/* 右侧容器 */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
 /* Language */
 .nav-lang {
-  position: absolute;
-  height: 24px;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -222,12 +229,13 @@ a { color: inherit; text-decoration: none; }
 
 /* 合作咨询按钮（蓝底白字） */
 .nav-cta {
-  position: absolute;
+  padding: 10px 24px;
   background: #0165F2;
   color: #ffffff;
   border-radius: 6px;
   font-size: 14px;
   font-weight: 600;
+  white-space: nowrap;
   transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
 }
 .nav-cta:hover {
@@ -485,7 +493,7 @@ a { color: inherit; text-decoration: none; }
 /* =========================================================
    Scene 通用画布（沿用 Hero 的 1920 scale 模式）
    每个 section 给 .scene-canvas 一个固定 height（Figma 原稿高度），
-   外层 .scene 根据 height / 1920 计算响应式高度。
+   使用 zoom 实现等比缩放，布局尺寸自动跟随，无需手动计算高度。
    ========================================================= */
 .scene {
   position: relative;
@@ -495,10 +503,9 @@ a { color: inherit; text-decoration: none; }
 .scene-canvas {
   position: relative;
   width: 1920px;
-  transform-origin: top left;
-  transform: scale(calc(var(--scale-w) / 1920));
-  /* 超宽屏时居中：(视口宽 - 1920) / 2，小屏时为 0 */
-  margin-left: max(0px, calc((var(--vw) - var(--max-w)) / 2));
+  zoom: var(--page-scale, 1);
+  /* 超宽屏居中（当 vw > 1920 时 zoom=1，用 margin 居中画布） */
+  margin: 0 auto;
 }
 /* 深色 / 浅色主题 */
 .scene--dark {
@@ -515,13 +522,7 @@ a { color: inherit; text-decoration: none; }
 /* scene 大标题配色：浅色场景应为深色，深色场景为白色 */
 .scene--light .scene-title--dark { color: rgba(0,0,0,.95); }
 .scene--dark  .scene-title--light { color: #fff; }
-/* 动态计算 section 高度（canvas 高 × var(--scale-w)/1920） */
-#scene1 { height: calc(var(--scale-w) * 941 / 1920); }
-#scene2 { height: calc(var(--scale-w) * 962 / 1920); }
-#scene3 { height: calc(var(--scale-w) * 984 / 1920); }
-#scene4 { height: calc(var(--scale-w) * 636 / 1920); }
-#scene5 { height: calc(var(--scale-w) * 1920 / 1920); }
-.site-footer { height: calc(var(--scale-w) * 1000 / 1920); }
+/* zoom 下 section 高度自动跟随画布，无需手动计算 */
 
 /* ===== Scene 通用：标签 / eyebrow / 标题 / 副标题 / Tab ===== */
 .scene-tag {
@@ -609,11 +610,8 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 .scene-tabs-line {
-  position: absolute;
-  height: 1px;
+  display: none;  /* 设计已去除 tab 下划线 */
 }
-.scene-tabs-line--dark  { background: rgba(255,255,255,.08); }
-.scene-tabs-line--light { background: rgba(0,0,0,.08); }
 
 
 /* =========================================================
@@ -906,6 +904,16 @@ a { color: inherit; text-decoration: none; }
 .scene--s2bg .scene-title--dark { color: rgba(0,0,0,.95); }
 .scene--s2bg .scene-eyebrow { color: #0165F2; opacity: .55; }
 
+/* Scene 02 Tab 下方描述文字 */
+.scene-desc {
+  position: absolute;
+  font-size: 18px;
+  line-height: 1.6;
+  font-weight: 400;
+}
+.scene-desc--dark { color: rgba(0,0,0,.6); }
+.scene-desc--light { color: rgba(255,255,255,.72); }
+
 /* =========================================================
    Scene 02 · 社区运营（浅色）· 深色卡片 + UI 截图风
    ========================================================= */
@@ -1012,15 +1020,14 @@ a { color: inherit; text-decoration: none; }
 .scene--s3bg .scene-eyebrow { color: #0165F2; opacity: .55; }
 
 /* — Scene 03 平台 icon 条 — */
-.s3-icon-bar {
+.s3-plat-bar {
   position: absolute;
   display: flex;
   justify-content: center;
 }
-.s3-icon-bar-img {
-  height: 36px;
+.s3-plat-bar-img {
+  height: 36px;  /* 与第二屏胶囊容器高度统一 */
   width: auto;
-  object-fit: contain;
 }
 
 /* — Scene 03 左侧特性 — */
@@ -1423,15 +1430,19 @@ a { color: inherit; text-decoration: none; }
 }
 .footer-bigname {
   position: absolute;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
-  font-size: 320px;
-  line-height: 1;
-  letter-spacing: -0.04em;
-  font-weight: 700;
   text-align: center;
-  color: rgba(255,255,255,.1);
   user-select: none;
   pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.footer-bigname-img {
+  width: auto;
+  height: 280px;
+  max-width: 100%;
+  object-fit: contain;
+  opacity: 1;
 }
 .footer-logo {
   position: absolute;
@@ -1588,29 +1599,29 @@ html[lang="en"] .footer-slogan {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: rgba(255,255,255,.35);
-  border: 1.5px solid rgba(255,255,255,.5);
+  background: rgba(255,255,255,.55);
+  border: 1.5px solid rgba(255,255,255,.7);
   cursor: pointer;
   transition: all .3s ease;
   position: relative;
 }
 .side-dot:hover {
-  background: rgba(255,255,255,.7);
+  background: rgba(255,255,255,.85);
   transform: scale(1.3);
 }
 .side-dot.active {
   background: #0165F2;
   border-color: #0165F2;
-  box-shadow: 0 0 0 4px rgba(1,101,242,.25);
+  box-shadow: 0 0 0 4px rgba(1,101,242,.35);
   transform: scale(1.2);
 }
 /* 浅色屏幕时切换圆点颜色 */
 .side-dots.on-light .side-dot {
-  background: rgba(0,0,0,.15);
-  border-color: rgba(0,0,0,.25);
+  background: rgba(0,0,0,.2);
+  border-color: rgba(0,0,0,.35);
 }
 .side-dots.on-light .side-dot:hover {
-  background: rgba(0,0,0,.4);
+  background: rgba(0,0,0,.5);
 }
 .side-dots.on-light .side-dot.active {
   background: #0165F2;
@@ -1680,10 +1691,6 @@ html[lang="en"] .hero-title-3 {
   top: 416px !important;
 }
 /* 英文副标题下移，与大标题拉开间距 */
-html[lang="en"] .hero-subtitle {
-  top: 545px !important;
-}
-
 /* --- 英文：首屏左侧图标左移、右侧图标右移，减少遮挡 --- */
 html[lang="en"] .hero-icon[data-id="facebook"],
 html[lang="en"] .hero-icon[data-id="telegram"],
@@ -1704,15 +1711,64 @@ html[lang="en"] .hero-icon[data-id="skype"] {
   margin-left: 80px !important;
 }
 
-/* --- 英文：首屏 Stats 小标题字体 --- */
+/* --- 英文：顶部 Tab 间距调整 --- */
+html[lang="en"] .nav-menu {
+  gap: 40px;
+}
+
+/* --- 英文：CN 放大一号与地球 icon 完全对齐 --- */
+html[lang="en"] .nav-lang span {
+  font-size: 16px;
+  font-weight: 400;
+  position: relative;
+  top: 1px;
+}
+
+/* --- 英文：副标题居中于大标题和页面 --- */
+html[lang="en"] .hero-subtitle {
+  top: 520px !important;
+  white-space: normal !important;
+  width: 1920px !important;
+  left: 0 !important;
+  text-align: center !important;
+  transform: none !important;
+  padding: 0 610px;
+  box-sizing: border-box;
+}
+
+/* --- 英文：Stats 卡片间距拉开 + 一行标题 + 描述完全显示 --- */
+html[lang="en"] .hero-stats .stat-item {
+  padding: 0 50px;
+}
 html[lang="en"] .hero-stats .stat-title {
   font-family: 'Radikal', 'Space Grotesk', sans-serif;
   font-weight: 700;
+  white-space: nowrap;
+}
+html[lang="en"] .hero-stats .stat-desc {
+  max-width: 220px;
 }
 
 /* --- 英文：Scene1 左侧蓝色小标题加粗 --- */
 html[lang="en"] .s1-bluet {
   font-weight: 700;
+}
+
+/* --- 英文：Scene1 bullet 列表 dot 对齐第一行 + 行间距缩小 --- */
+html[lang="en"] .s1-bullets li {
+  align-items: flex-start;
+  line-height: 1.6;
+}
+html[lang="en"] .s1-bullets li .s1-dot-blue {
+  margin-top: 6px;
+}
+
+/* --- 英文：Scene1 底部按钮条自适应宽度 --- */
+html[lang="en"] .s1-shot-btnbar {
+  width: auto;
+}
+html[lang="en"] .s1-btn--amber {
+  margin-left: 0;
 }
 
 /* --- 英文：Scene2 Discord icon 左移避免遮挡标题 --- */
@@ -1740,10 +1796,17 @@ html[lang="en"] #scene5 .scene-title {
   text-align: center;
 }
 
-/* --- 英文：Scene3 蓝色标题加粗 + 列表上移 --- */
+/* --- 英文：Scene3 蓝色标题加粗 + 描述/列表调整 --- */
 html[lang="en"] .s3-feat-title {
   font-weight: 700;
 }
 html[lang="en"] .s3-feat-desc {
   margin-bottom: 20px;
+  max-width: 285px;
+}
+html[lang="en"] .s3-feat-list li {
+  line-height: 1.6;
+}
+html[lang="en"] .s3-feat-list li::before {
+  top: 7px;
 }
