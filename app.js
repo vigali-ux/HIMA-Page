@@ -2,12 +2,16 @@
    HIMA 官网交互脚本（第五版 · 加入滚动入场动画）
    ========================================================= */
 
-// ========= 0. 视口宽度变量（排除滚动条） =========
+// ========= 0. 视口宽度变量（排除滚动条）+ 画布高度自适应 =========
 // 解决 Windows 经典滚动条占位导致 100vw 大于实际可见区域的问题
 // --vw 为实际 clientWidth，CSS 中通过 min(--vw, --max-w) 限制最大 1920px
 const setVW = () => {
   const vw = document.documentElement.clientWidth;
   document.documentElement.style.setProperty('--vw', vw + 'px');
+
+  // 计算缩放比例：min(vw, 1920) / 1920
+  const scale = Math.min(vw, 1920) / 1920;
+  document.documentElement.style.setProperty('--page-scale', scale);
 };
 setVW();
 window.addEventListener('resize', setVW);
@@ -271,6 +275,15 @@ const initSideDots = () => {
     { id: 'scene4', theme: 'light' },
   ];
 
+  const getOffsetTop = (el) => {
+    let top = 0;
+    while (el) {
+      top += el.offsetTop;
+      el = el.offsetParent;
+    }
+    return top;
+  };
+
   const updateDots = () => {
     const scrollY = window.scrollY + window.innerHeight * 0.4;
     let activeId = 'hero';
@@ -278,7 +291,7 @@ const initSideDots = () => {
 
     for (let i = sections.length - 1; i >= 0; i--) {
       const el = document.getElementById(sections[i].id);
-      if (el && el.offsetTop <= scrollY) {
+      if (el && getOffsetTop(el) <= scrollY) {
         activeId = sections[i].id;
         activeTheme = sections[i].theme;
         break;
@@ -319,6 +332,7 @@ const i18n = {
     's1-b3': '定时 / 定向发布，全球多时区精准覆盖', 's1-b4': '实时预览各平台展示效果',
     's1-btn1': '🏷 标签', 's1-btn2': '📅 选取时间', 's1-btn3': '⚠ 立即发布', 's1-btn4': '⏩ 添加至队列',
     's2-title': '社区运营', 's2-sub': '司内最强的 Discord 官方私域全场景运营解决方案，助力业务打造全能可控的官方私域社区',
+    's2-desc': 'Discord 服务器内一键绑定游戏账号，绑定成功即触发权益发放，深度打通游戏与社区生态',
     's2-tab1': '游戏账号绑定', 's2-tab2': '内容管理', 's2-tab3': '端内数据查询', 's2-tab4': '定制营销活动', 's2-tab5': '更多能力',
     's3-title': '直播运营', 's3-sub': '支持主流海外直播平台的丰富营销能力，覆盖掉宝、互动挂件、主播挑战、AI 高光识别',
     's3-tab1': '直播间掉宝', 's3-tab2': '互动挂件', 's3-tab3': '主播挑战活动', 's3-tab4': '更多能力',
@@ -336,7 +350,7 @@ const i18n = {
     'footer-slogan': '一站式海外游戏运营平台',
     'footer-links1': '<a>关于腾讯</a><span class="sep">|</span><a>About Tencent</a><span class="sep">|</span><a>服务协议</a><span class="sep">|</span><a>隐私政策</a><span class="sep">|</span><a>开放平台</a><span class="sep">|</span><a>广告服务</a><span class="sep">|</span><a>腾讯招聘</a><span class="sep">|</span><a>腾讯公益</a><span class="sep">|</span><a>腾讯云</a><span class="sep">|</span><a>客服中心</a><span class="sep">|</span><a>举报中心</a><span class="sep">|</span><a>网址导航</a>',
     'footer-links2': '<a>深圳举报中心</a><span class="sep">|</span><a>深圳公安局</a><span class="sep">|</span><a>抵制违法广告承诺书</a><span class="sep">|</span><a>版权保护投诉指引</a><span class="sep">|</span><a>广东省通管局</a>',
-    'footer-company': '粤网文[2017]6138-1456号 新出网证（粤）字010号 网络视听许可证1904073号 网络视听许可证1904073号 增值电信业务经营许可证: 粤B2-20090059 B2-20090028<br/>新闻信息服务许可证 粤府新函[2001]87号 违法和不良信息举报电话：0755-83765566-9 粤公网安备44030002000001号<br/>互联网药品信息服务资格证书 （粤）一非营业性一2017-0153',
+    'footer-company': '粤网文[2017]6138-1456号 新出网证（粤）字010号 网络视听许可证1904073号 增值电信业务经营许可证: 粤B2-20090059 B2-20090028<br/>新闻信息服务许可证 粤府新函[2001]87号 违法和不良信息举报电话：0755-83765566-9 粤公网安备44030002000001号<br/>互联网药品信息服务资格证书 （粤）一非营业性一2017-0153',
   },
   en: {
     'page-title': 'HIMA · Your All-in-One Overseas Game Operations Platform',
@@ -344,10 +358,10 @@ const i18n = {
     'nav-cta': 'Contact Us',
     'hero-t1a': 'Your ', 'hero-t1b': 'All-in-One', 'hero-t2': 'Overseas Game', 'hero-t3': 'Operations Platform',
     'hero-sub': 'Empowering overseas game operations with comprehensive tech support and global marketing ecosystem integration',
-    'stat-t1': 'Core Scenarios', 'stat-d1': 'Social Media, Community, Live Streaming, DM<br/>Covering full-lifecycle core operation scenarios',
-    'stat-t2': 'Overseas Channels', 'stat-d2': 'One-stop access to Discord, Twitch and<br/>other major global social platforms',
-    'stat-t3': 'Game Projects', 'stat-d3': 'Proven track record with PUBG Mobile,<br/>Delta Force and other hit titles',
-    'stat-t4': 'Languages', 'stat-d4': 'CN, EN, JP, KR, DE and more<br/>Multi-language localized operations & delivery',
+    'stat-t1': 'Core Scenarios', 'stat-d1': 'Social Media, Community, Live Streaming, DM Covering full-lifecycle core operation scenarios',
+    'stat-t2': 'Overseas Channels', 'stat-d2': 'One-stop access to Discord, Twitch and other major global social platforms',
+    'stat-t3': 'Game Projects', 'stat-d3': 'Proven track record with PUBG Mobile, Delta Force and other hit titles',
+    'stat-t4': 'Languages', 'stat-d4': 'CN, EN, JP, KR, DE and more Multi-language localized operations & delivery',
     's1-title': 'Social Media Management', 's1-sub': 'Covering all major global social media platforms with integrated posting, engagement and analytics solutions',
     's1-more': 'More platforms coming',
     's1-tab1': 'Post Editor', 's1-tab2': 'Scheduling', 's1-tab3': 'Dashboard', 's1-tab4': 'More Features', 's1-tab5': 'Review Workflow',
@@ -356,8 +370,10 @@ const i18n = {
     's1-b3': 'Scheduled / targeted posting across global time zones', 's1-b4': 'Real-time preview across all platforms',
     's1-btn1': '🏷 Tags', 's1-btn2': '📅 Schedule', 's1-btn3': '⚠ Publish Now', 's1-btn4': '⏩ Add to Queue',
     's2-title': 'Community Operations', 's2-sub': 'The most powerful Discord community operations solution, empowering fully-controlled official community management',
+    's2-desc': 'One-click game account binding within Discord servers — upon successful binding, rewards are automatically issued, deeply connecting gaming and community ecosystems',
     's2-tab1': 'Account Binding', 's2-tab2': 'Content Mgmt', 's2-tab3': 'In-Game Data', 's2-tab4': 'Custom Campaigns', 's2-tab5': 'More Features',
     's3-title': 'Live Streaming', 's3-sub': 'Rich marketing capabilities across major overseas streaming platforms — drops, widgets, streamer challenges, AI highlights',
+    's3-more': 'More platforms coming',
     's3-tab1': 'Live Drops', 's3-tab2': 'Widgets', 's3-tab3': 'Streamer Challenge', 's3-tab4': 'More Features',
     's3-ft': 'Player & Streamer<br/>Interactive Challenge',
     's3-fd': 'Built on Twitch Extension and more, enabling Streamer Challenge and interactive quests between players and streamers.',
@@ -406,6 +422,26 @@ function switchLang(lang) {
 
   // 更新 html lang 属性
   document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+
+  // 英文版替换社区运营四张内容图
+  const s2CardImgs = document.querySelectorAll('.s2-card-img');
+  const s2ZhSrcs = ['assets/第三屏内容图/成员成长激励.png', 'assets/第三屏内容图/AI智能客服.png', 'assets/第三屏内容图/开黑Bot.png', 'assets/第三屏内容图/添加游戏好友.png'];
+  const s2EnSrcs = ['assets/第三屏内容图-英文/1.png', 'assets/第三屏内容图-英文/2.png', 'assets/第三屏内容图-英文/3.png', 'assets/第三屏内容图-英文/4.png'];
+  s2CardImgs.forEach((img, i) => {
+    if (i < 4) img.src = lang === 'en' ? s2EnSrcs[i] : s2ZhSrcs[i];
+  });
+
+  // 英文版替换私信营销右侧图片
+  const s4RightImg = document.querySelector('.s4-right-img');
+  if (s4RightImg) {
+    s4RightImg.src = lang === 'en' ? 'assets/私信营销部分右侧图片-英文.png' : 'assets/私信营销部分右侧图.png';
+  }
+
+  // 英文版替换直播运营icon条
+  const s3PlatImg = document.querySelector('.s3-plat-bar-img');
+  if (s3PlatImg) {
+    s3PlatImg.src = lang === 'en' ? 'assets/第四屏胶囊容器-英文.png' : 'assets/第四屏胶囊容器-中文.png';
+  }
 
   // 重新初始化 Tab 指示条位置
   if (typeof initTabSwitcher === 'function') initTabSwitcher();
