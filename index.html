@@ -9,7 +9,16 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=20260430v" />
+  <link rel="stylesheet" href="style.css?v=20260507v" />
+  <script>
+    // 尽早设置缩放变量，防止 FOUC
+    (function(){
+      var vw = document.documentElement.clientWidth;
+      var s = Math.min(vw, 1920) / 1920;
+      document.documentElement.style.setProperty('--vw', vw + 'px');
+      document.documentElement.style.setProperty('--page-scale', s);
+    })();
+  </script>
 </head>
 <body>
 
@@ -36,41 +45,38 @@
   <div class="hero-bg"></div>
 
   <!-- 1920×1006 精确画布 -->
-  <div class="hero-canvas">
+  <!-- ===== 顶部导航（脱离画布缩放，原生Flexbox自适应） ===== -->
+  <header class="hero-nav">
+    <a href="#hero" class="nav-brand">
+      <img class="nav-brand-mark" src="assets/icons/hima-logo.png" alt="HIMA" />
+      <span class="nav-brand-name">HIMA</span>
+    </a>
 
-    <!-- 背景漩涡：外层 wrapper 负责"锁死中心"，内层 img 只负责"转+缩"，彻底不漂 -->
-    <div class="hero-vortex-wrap" aria-hidden="true">
-      <img class="hero-vortex" src="assets/新的背景漩涡.png" alt="" />
-    </div>
+    <nav class="nav-menu">
+      <a href="#scene1" class="nav-link" data-i18n="nav-sm">社媒管理</a>
+      <a href="#scene2" class="nav-link" data-i18n="nav-sq">社区运营</a>
+      <a href="#scene3" class="nav-link" data-i18n="nav-zb">直播运营</a>
+      <a href="#scene4" class="nav-link" data-i18n="nav-sx">私信营销</a>
+    </nav>
 
-    <!-- ===== 顶部导航（Figma 节点 0:1958，H=80） ===== -->
-    <header class="hero-nav">
-      <!-- LOGO（黑色） -->
-      <a href="#hero" class="nav-brand" style="left:60px; top:21px;">
-        <img class="nav-brand-mark" src="assets/icons/hima-logo.png" alt="HIMA" />
-        <span class="nav-brand-name">HIMA</span>
-      </a>
-
-      <!-- 菜单（Figma x=682, y=28, w=496, h=24） -->
-      <nav class="nav-menu" style="left:682px; top:28px; width:496px;">
-        <a href="#scene1" class="nav-link" data-i18n="nav-sm">社媒管理</a>
-        <a href="#scene2" class="nav-link" data-i18n="nav-sq">社区运营</a>
-        <a href="#scene3" class="nav-link" data-i18n="nav-zb">直播运营</a>
-        <a href="#scene4" class="nav-link" data-i18n="nav-sx">私信营销</a>
-      </nav>
-
-      <!-- Language（Figma x=1669, y=28） -->
-      <div class="nav-lang" id="langToggle" style="left:1669px; top:28px; cursor:pointer;">
+    <div class="nav-right">
+      <div class="nav-lang" id="langToggle">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10"/>
           <path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/>
         </svg>
         <span id="langLabel">英文</span>
       </div>
+      <button class="nav-cta" data-i18n="nav-cta">合作咨询</button>
+    </div>
+  </header>
 
-      <!-- 合作咨询按钮（Figma 0:1976: x=1749, w=111, h=44） -->
-      <button class="nav-cta" data-i18n="nav-cta" style="left:1749px; top:18px; width:111px; height:44px;">合作咨询</button>
-    </header>
+  <div class="hero-canvas">
+
+    <!-- 背景漩涡：外层 wrapper 负责"锁死中心"，内层 img 只负责"转+缩"，彻底不漂 -->
+    <div class="hero-vortex-wrap" aria-hidden="true">
+      <img class="hero-vortex" src="assets/新的背景漩涡.png" alt="" />
+    </div>
 
     <!-- ===== 中心人物 KV（Figma 0:2420: x=377.09, y=58, 314×453） ===== -->
     <img class="hero-kv" src="assets/icons/机器人.png" alt="HIMA 3D Mascot" />
@@ -219,7 +225,7 @@
     </p>
 
     <!-- 标题下的平台 Logo 条 — 居中对齐 (Figma: x=795, w=330 → center=960) -->
-    <div class="s1-plat-bar" style="left:50%; top:224px; transform:translateX(-50%);">
+    <div class="s1-plat-bar" style="left:50%; top:226px; transform:translateX(-50%);">
       <img src="assets/icons/plat-01.svg" alt="" />
       <img src="assets/icons/plat-02-youtube.svg" alt="YouTube" />
       <img src="assets/icons/plat-03-instagram.svg" alt="Instagram" />
@@ -230,7 +236,7 @@
     </div>
 
     <!-- Tab 导航（5 个）— Figma: x=630, y=296, w=660 -->
-    <div class="scene-tabs scene-tabs--dark" style="left:630px; top:296px; width:660px;">
+    <div class="scene-tabs scene-tabs--dark" style="left:630px; top:312px; width:660px;">
       <button class="tab active"><span data-i18n="s1-tab1">发帖编辑</span></button>
       <button class="tab"><span data-i18n="s1-tab2">策略排期</span></button>
       <button class="tab"><span data-i18n="s1-tab3">数据看板</span></button>
@@ -238,10 +244,10 @@
       <button class="tab"><span data-i18n="s1-tab5">审核工作流</span></button>
       <span class="tab-indicator"></span>
     </div>
-    <div class="scene-tabs-line scene-tabs-line--dark" style="left:360px; top:326px; width:1200px;"></div>
+    <div class="scene-tabs-line scene-tabs-line--dark" style="left:360px; top:342px; width:1200px;"></div>
 
     <!-- ======= 下半部分：左蓝色标题 + 4 条 bullet ======= -->
-    <div class="s1-left" style="left:360px; top:400px; width:260px;">
+    <div class="s1-left" style="left:360px; top:402px; width:260px;">
       <h3 class="s1-bluet" data-i18n="s1-bluet" data-i18n-html>
         富文本编辑<br/>一键多发
       </h3>
@@ -254,7 +260,7 @@
     </div>
 
     <!-- ======= 右侧三张配图（主图 + 富文本卡 + 按钮条） ======= -->
-    <div class="s1-shots" style="left:654px; top:400px; width:881px; height:409px;">
+    <div class="s1-shots" style="left:654px; top:402px; width:881px; height:409px;">
       <!-- 主图：CrossPost 编辑界面 (793 × 399)，偏右上 -->
       <img class="s1-shot-main" src="assets/scenes/scene2-main.png" alt="CrossPost 编辑器" />
       <!-- 富文本编辑卡浮在左下 (547 × 172) -->
@@ -298,18 +304,22 @@
     </p>
 
     <!-- Tab 导航（5 个） -->
-    <div class="scene-tabs scene-tabs--light" style="left:667px; top:337px; width:586px;">
+    <div class="scene-tabs scene-tabs--light" style="left:667px; top:358px; width:586px;">
       <button class="tab active"><span data-i18n="s2-tab1">游戏账号绑定</span></button>
-      <button class="tab"><span data-i18n="s2-tab2">内容管理</span></button>
-      <button class="tab"><span data-i18n="s2-tab3">端内数据查询</span></button>
-      <button class="tab"><span data-i18n="s2-tab4">定制营销活动</span></button>
-      <button class="tab"><span data-i18n="s2-tab5">更多能力</span></button>
+      <button class="tab"><span data-i18n="s2-tab2">端内数据查询</span></button>
+      <button class="tab"><span data-i18n="s2-tab3">定制营销活动</span></button>
+      <button class="tab"><span data-i18n="s2-tab4">更多能力</span></button>
       <span class="tab-indicator"></span>
     </div>
-    <div class="scene-tabs-line scene-tabs-line--light" style="left:360px; top:367px; width:1200px;"></div>
+    <div class="scene-tabs-line scene-tabs-line--light" style="left:360px; top:388px; width:1200px;"></div>
+
+    <!-- Tab 下方描述文字 -->
+    <p class="scene-desc scene-desc--dark" data-i18n="s2-desc" style="left:0; top:448px; width:1920px; text-align:center;">
+      Discord 服务器内一键绑定游戏账号，绑定成功即触发权益发放，深度打通游戏与社区生态
+    </p>
 
     <!-- 4 张深色功能卡（真实设计截图） -->
-    <div class="s2-cards" style="left:360px; top:466px; width:1200px; height:370px;">
+    <div class="s2-cards" style="left:360px; top:490px; width:1200px; height:370px;">
       <!-- 卡 1：成员成长激励 -->
       <div class="s2-card stagger-item">
         <img class="s2-card-img" src="assets/第三屏内容图/成员成长激励.png" alt="成员成长激励" />
@@ -344,22 +354,22 @@
     </p>
 
     <!-- 平台 icon 条 -->
-    <div class="s3-icon-bar" style="left:0; top:240px; width:1920px;">
-      <img src="assets/第四屏icon条.png" alt="平台icons" class="s3-icon-bar-img" />
+    <div class="s3-plat-bar" style="left:50%; top:240px; transform:translateX(-50%);">
+      <img src="assets/第四屏胶囊容器-中文.png" alt="平台icons" class="s3-plat-bar-img" />
     </div>
 
     <!-- Tab 导航（4 个） -->
-    <div class="scene-tabs scene-tabs--dark" style="left:689px; top:320px; width:542px;">
+    <div class="scene-tabs scene-tabs--dark" style="left:689px; top:326px; width:542px;">
       <button class="tab active"><span data-i18n="s3-tab1">直播间掉宝</span></button>
       <button class="tab"><span data-i18n="s3-tab2">互动挂件</span></button>
       <button class="tab"><span data-i18n="s3-tab3">主播挑战活动</span></button>
       <button class="tab"><span data-i18n="s3-tab4">更多能力</span></button>
       <span class="tab-indicator"></span>
     </div>
-    <div class="scene-tabs-line scene-tabs-line--dark" style="left:360px; top:350px; width:1200px;"></div>
+    <div class="scene-tabs-line scene-tabs-line--dark" style="left:360px; top:356px; width:1200px;"></div>
 
     <!-- 左侧「互动挑战」特性点 -->
-    <div class="s3-features" style="left:360px; top:408px; width:285px;">
+    <div class="s3-features" style="left:360px; top:416px; width:285px;">
       <div class="s3-feat-title" data-i18n="s3-ft" data-i18n-html>玩家与主播<br/>互动挑战</div>
       <div class="s3-feat-desc" data-i18n="s3-fd">基于 Twitch Extension 等能力，开发 Streamer Challenge 等玩家与主播的互动挑战任务。</div>
       <ul class="s3-feat-list">
@@ -370,7 +380,7 @@
     </div>
 
     <!-- 右侧大图卡片（设计截图） -->
-    <div class="s3-showcase" style="left:672px; top:408px; width:800px; height:415px;">
+    <div class="s3-showcase" style="left:672px; top:416px; width:800px; height:415px;">
       <img class="s3-main-img" src="assets/第四屏内容图.png" alt="直播运营" />
 
     </div>
@@ -410,7 +420,7 @@
     </p>
 
     <!-- 左右容器：flex 水平布局，左文案+右图片垂直对齐 -->
-    <div class="s4-content" style="left:360px; top:262px; width:1200px;">
+    <div class="s4-content" style="left:360px; top:292px; width:1200px;">
       <!-- 左侧 4 项特性列表 -->
       <ul class="s4-features">
         <li>
@@ -467,13 +477,13 @@
   </div>
   <div class="scene-canvas" style="height:1000px;">
 
-    <!-- 背景大字 HIMA -->
-    <div class="footer-bigname" style="left:0; top:200px; width:1920px;">HIMA</div>
+    <!-- 背景大字 HIMA（使用设计稿切图） -->
+    <div class="footer-bigname" style="left:0; top:200px; width:1920px;"><img src="assets/底部背景HIMA.png" alt="HIMA" class="footer-bigname-img" /></div>
 
-    <!-- Logo 圆球徽章（渐变主色） -->
+    <!-- Logo 圆球徽章（高清切图） -->
     <div class="footer-logo" style="left:885px; top:174px; width:150px; height:150px;">
       <div class="footer-logo-badge">
-        <img src="assets/icons/hima-logo.png" alt="HIMA" onerror="this.style.display='none'"/>
+        <img src="assets/底部大logo.png" alt="HIMA" onerror="this.style.display='none'"/>
       </div>
     </div>
 
@@ -504,7 +514,7 @@
         <a>广东省通管局</a>
       </div>
       <div class="footer-company" data-i18n="footer-company" data-i18n-html>
-        粤网文[2017]6138-1456号 新出网证（粤）字010号 网络视听许可证1904073号 网络视听许可证1904073号 增值电信业务经营许可证: 粤B2-20090059 B2-20090028<br/>
+        粤网文[2017]6138-1456号 新出网证（粤）字010号 网络视听许可证1904073号 增值电信业务经营许可证: 粤B2-20090059 B2-20090028<br/>
         新闻信息服务许可证 粤府新函[2001]87号 违法和不良信息举报电话：0755-83765566-9 粤公网安备44030002000001号<br/>
         互联网药品信息服务资格证书 （粤）一非营业性一2017-0153
       </div>
