@@ -264,8 +264,16 @@ html[lang="zh-CN"] .nav-menu {
   height: 453.2px;
   object-fit: contain;
   z-index: 5;
+  cursor: pointer;
   animation: kvFloat 5s ease-in-out infinite;
   filter: drop-shadow(0 30px 60px rgba(15,40,100,.22));
+  will-change: transform, filter;
+  transition: filter .28s ease;
+}
+.hero-kv:hover {
+  filter:
+    drop-shadow(0 34px 68px rgba(15,40,100,.26))
+    drop-shadow(0 0 26px rgba(255,255,255,.75));
 }
 @keyframes kvFloat {
   0%, 100% { transform: translateY(0); }
@@ -288,25 +296,29 @@ html[lang="zh-CN"] .nav-menu {
   will-change: transform, filter;
   transition: filter .3s ease;
 }
-/* hover 时切换到 hover 版本的 floating —— 基线抬高、放大到 1.12，
-   继续做微小的上下浮动，既"定住放大"又"保持微动态"。
-   阴影用品牌蓝 + 白色柔光双层叠加，避免暗色 drop-shadow 视觉发黑 */
-.hero-icon:hover {
-  animation: iconFloatHover 3s ease-in-out infinite;
-  animation-delay: 0s;
-  filter:
-    drop-shadow(0 0 24px rgba(255,255,255,.85))      /* 内圈白色柔光，提亮 icon 边缘 */
-    drop-shadow(0 18px 40px rgba(1,101,242,.55))     /* 外圈品牌蓝发光 */
-    drop-shadow(0 4px 14px rgba(64,140,255,.45));    /* 近距离淡蓝补光 */
-  z-index: 15;
-}
+/* 首屏 icons 不设置 hover 放大或发光，保持整体跟随与常态漂浮即可 */
 @keyframes iconFloat {
   0%, 100% { transform: translateY(0)     rotate(0deg) scale(1); }
   50%      { transform: translateY(-10px) rotate(1deg) scale(1); }
 }
-@keyframes iconFloatHover {
-  0%, 100% { transform: translateY(-2px) rotate(-1deg) scale(1.12); }
-  50%      { transform: translateY(-6px) rotate(1deg)  scale(1.14); }
+.hero-follow-layer {
+  position: absolute;
+  inset: 0;
+  width: 1920px;
+  height: 1030px;
+  z-index: 3;
+  transform: translate3d(var(--hero-follow-x, 0px), var(--hero-follow-y, 0px), 0);
+  transition: transform .72s cubic-bezier(.22, 1, .36, 1);
+  will-change: transform;
+  pointer-events: none;
+}
+.hero-follow-layer .hero-kv,
+.hero-follow-layer .hero-icon {
+  pointer-events: auto;
+}
+.hero-canvas.hero-following .hero-title,
+.hero-canvas.hero-following .hero-subtitle {
+  text-shadow: 0 14px 34px rgba(1, 101, 242, .12);
 }
 .hero-icon[data-id="facebook"]  { --delay: 0s;   }
 .hero-icon[data-id="telegram"]  { --delay: .4s;  }
@@ -709,7 +721,6 @@ html[lang="zh-CN"] .nav-menu {
   /* SVG 本身已是白色 fill，无需 filter */
   transition: opacity .2s;
 }
-.s1-plat-bar img:hover { opacity: 1; }
 .s1-plat-more {
   font-family: 'PingFang SC', sans-serif;
   font-size: 11px;
@@ -1198,13 +1209,6 @@ html[lang="en"] .s2-3dicon {
   filter: none;
   transition: filter .3s ease, transform .3s ease;
 }
-.s3-3dicon.icon-landed:hover {
-  animation-play-state: paused !important;
-  transform: scale(1.12);
-  filter:
-    drop-shadow(0 18px 36px rgba(145,70,255,.5))
-    drop-shadow(0 6px 14px rgba(145,70,255,.25));
-}
 #scene3.is-in .s3-3dicon[data-drop="0"] {
   animation:
     s3IconDrop  1.1s cubic-bezier(.34, 1.56, .64, 1) .15s forwards,
@@ -1260,12 +1264,6 @@ html[lang="en"] .s2-3dicon {
     drop-shadow(0 22px 44px rgba(6,199,85,.4))
     drop-shadow(0 8px 18px rgba(6,199,85,.2));
   transition: filter .3s ease, transform .3s ease;
-}
-.s4-3dicon.icon-landed:hover {
-  transform: scale(1.12) !important;
-  filter:
-    drop-shadow(0 26px 50px rgba(6,199,85,.55))
-    drop-shadow(0 10px 22px rgba(6,199,85,.3));
 }
 .shared-bg-wrap.s4-active .s4-3dicon[data-drop="0"] {
   animation:
@@ -1355,11 +1353,6 @@ html[lang="en"] .s2-3dicon {
   border: 1px solid rgba(255,255,255,.08);
   box-shadow: none;
   transition: transform .3s cubic-bezier(.22,.61,.36,1), box-shadow .3s;
-}
-.s4-plat:hover {
-  transform: scale(1.04);
-  background: rgba(255,255,255,.10);
-  box-shadow: 0 8px 24px rgba(1,101,242,.2);
 }
 .s4-plat-logo {
   width: 40px; height: 40px;
@@ -1504,6 +1497,7 @@ html[lang="en"] .s2-3dicon {
 /* 私信营销 + 合作游戏 + Footer 共用背景图 */
 .shared-bg-wrap {
   position: relative;
+  /* 第五屏背景是半透明 PNG，外层底色必须保持浅色，否则整张背景会被压暗 */
   background: #ffffff url('assets/第五屏背景.png') top center / cover no-repeat;
 }
 .shared-bg-wrap .scene--light {
@@ -1516,7 +1510,7 @@ html[lang="en"] .s2-3dicon {
   position: relative;
   width: 100%;
   overflow: hidden;
-  background: #14161f;
+  background: #14161C;
   color: rgba(255,255,255,.9);
 }
 .footer-bigname {
@@ -1564,8 +1558,20 @@ html[lang="en"] .s2-3dicon {
   line-height: 1.2;
   letter-spacing: -0.02em;
   font-weight: 400;
-  color: #fff;
+  color: transparent;
+  background: linear-gradient(110deg, #ffffff 0%, #ffffff 32%, #dce9ff 42%, #6fa8ff 50%, #dce9ff 58%, #ffffff 68%, #ffffff 100%);
+  background-size: 320% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: footerSloganShine 9.6s cubic-bezier(.4, 0, .2, 1) infinite;
+  text-shadow: 0 0 28px rgba(1,101,242,.18);
   z-index: 2;
+}
+@keyframes footerSloganShine {
+  0% { background-position: 145% 50%; }
+  18% { background-position: 145% 50%; }
+  72% { background-position: -45% 50%; }
+  100% { background-position: -45% 50%; }
 }
 html[lang="en"] .footer-slogan {
   font-family: 'Radikal', 'Space Grotesk', sans-serif;
@@ -1596,7 +1602,7 @@ html[lang="en"] .footer-slogan {
   font-size: 14px;
   color: rgba(255,255,255,.75);
   margin-top: 24px;
-  padding-bottom: 40px;
+  padding-bottom: 56px;
 }
 
 /* ===== Footer 底部流光动效 ===== */
