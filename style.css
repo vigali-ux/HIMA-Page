@@ -94,8 +94,8 @@ a { color: inherit; text-decoration: none; }
    新图 1854×1854 正方形。 ===== */
 .hero-vortex-wrap {
   position: absolute;
-  left: 960px;                          /* 画布水平中心 */
-  top: 503px;                           /* 画布垂直中心 */
+  left: 935px;                          /* 画布水平中心左移25px */
+  top: 428px;                           /* 画布垂直中心上移75px */
   width: 1400px;                        /* 正方形，略小于画布以免溢出 */
   height: 1400px;
   transform: translate(-50%, -50%);     /* 把中心对齐到 (960,503) */
@@ -163,14 +163,16 @@ a { color: inherit; text-decoration: none; }
 .nav-brand-mark {
   width: 39px; height: 38px;
   object-fit: contain;
-  /* LOGO 图标保持原色；如需纯黑化可加 filter: brightness(0) */
+  filter: brightness(0);
 }
 .nav-brand-name {
   font-family: 'Radikal', 'Space Grotesk', sans-serif;
   font-weight: 700;
-  font-size: 24px;
+  font-size: 26px;
   letter-spacing: -.5px;
   color: #11131b;
+  position: relative;
+  top: 2px;
 }
 
 /* 菜单（Figma x=682, w=496, h=24） */
@@ -567,7 +569,7 @@ a { color: inherit; text-decoration: none; }
 .scene-subtitle {
   position: absolute;
   text-align: center;
-  font-size: 18px;
+  font-size: 14px;
   line-height: 1.6;
   font-weight: 400;
 }
@@ -711,8 +713,23 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ——— 左侧：蓝色大标题 + 4 条 bullet ——— */
-.s1-left {
+/* ——— 社媒管理 Tab 面板 ——— */
+.s1-tab-content {
   position: absolute;
+}
+.s1-panel {
+  display: none;
+  width: 100%;
+  height: 100%;
+}
+.s1-panel--active {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+}
+.s1-left {
+  flex-shrink: 0;
+  width: 260px;
   color: #fff;
 }
 .s1-bluet {
@@ -722,8 +739,14 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.2;
   letter-spacing: -0.04em;
   color: #0165F2;
-  margin: 0 0 28px 0;
-  /* 遵循设计稿：无发光效果 */
+  margin: 0 0 16px 0;
+}
+.s1-desc {
+  font-family: 'PingFang SC', sans-serif;
+  font-size: 14px;
+  line-height: 1.8;
+  color: rgba(255,255,255,.7);
+  margin: 0 0 20px 0;
 }
 .s1-bullets {
   list-style: none;
@@ -738,7 +761,7 @@ a { color: inherit; text-decoration: none; }
   align-items: center;
   gap: 12px;
   font-family: 'PingFang SC', sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: -0.025em;
   line-height: 2.2;
   color: rgba(255,255,255,.88);
@@ -748,74 +771,34 @@ a { color: inherit; text-decoration: none; }
   height: 6px;
   border-radius: 50%;
   background: #0165F2;
-  box-shadow: 0 0 0 4px rgba(1,101,242,.18);
   flex-shrink: 0;
 }
-
-/* ——— 右侧三张真实配图 ——— */
-.s1-shots {
-  position: absolute;
-}
-.s1-shot-main {
-  position: absolute;
-  width: 793px;
-  height: 399px;
-  right: 0;
-  top: 0;
-  border-radius: 4px;
-  object-fit: cover;
-  background: transparent;
-}
-.s1-shot-card {
-  position: absolute;
-  width: 547px;
-  height: 172px;
-  left: 0;
-  top: 166px;
-  border-radius: 4px;
-  object-fit: cover;
-  z-index: 2;
-}
-.s1-shot-btnbar {
-  position: absolute;
-  right: 54px;
-  top: 369px;
-  width: 334px;
-  height: 40px;
-  background: #ffffff;
-  border-radius: 4px;
+.s1-right {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
   display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0 6px;
-  z-index: 3;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  align-items: flex-start;
+  justify-content: center;
 }
-.s1-btn {
-  height: 28px;
-  padding: 0 10px;
-  border-radius: 4px;
-  font-family: 'PingFang SC', sans-serif;
-  font-size: 11px;
-  font-weight: 500;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  white-space: nowrap;
+.s1-panel-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
 }
-.s1-btn--ghost {
-  background: transparent;
-  color: #0a0c14;
-  border: 1px solid #e0e3eb;
+/* 仅审核工作流图片：放大+上移 */
+.s1-panel[data-panel="2"] .s1-panel-img {
+  width: 125%;
+  max-width: 125%;
+  margin-top: -50px;
+  object-position: top;
 }
-.s1-btn--primary {
-  background: #5b5bff;
-  color: #fff;
-}
-.s1-btn--amber {
-  background: #f3a43d;
-  color: #fff;
-  margin-left: auto;
+/* Tab5 更多能力：右侧图片上移20px并放大5% */
+.s1-panel[data-panel="4"] .s1-panel-img {
+  margin-top: -20px;
+  transform: scale(1.05);
+  transform-origin: center top;
 }
 
 /* ——— 右上角 3D Icons，叠放，带掉落动画 ——— */
@@ -907,7 +890,7 @@ a { color: inherit; text-decoration: none; }
 /* Scene 02 Tab 下方描述文字 */
 .scene-desc {
   position: absolute;
-  font-size: 18px;
+  font-size: 14px;
   line-height: 1.6;
   font-weight: 400;
 }
@@ -961,11 +944,68 @@ a { color: inherit; text-decoration: none; }
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-4px); }
 }
-.s2-cards {
+/* Scene2 Tab 内容面板容器 */
+.s2-tab-content {
   position: absolute;
+}
+.s2-panel {
+  display: none;
+  width: 100%;
+  height: 100%;
+}
+.s2-panel--active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Tab3/Tab4 图片紧贴文案 */
+.s2-panel[data-panel="2"].s2-panel--active,
+.s2-panel[data-panel="3"].s2-panel--active {
+  align-items: flex-start;
+  padding-top: 6px;
+}
+.s2-video {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 10px;
+}
+.s2-cards {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
+  width: 100%;
+}
+/* Tab4 更多能力: 2x2 网格 (Figma: 360x180 per card, gap-x:20, gap-y:10, total 740x370) */
+.s2-cards--grid2x2 {
+  grid-template-columns: 360px 360px;
+  grid-template-rows: 180px 180px;
+  column-gap: 20px;
+  row-gap: 10px;
+  width: 740px;
+  height: 370px;
+  margin: 0 auto;
+  justify-content: center;
+}
+.s2-cards--grid2x2 .s2-card {
+  overflow: hidden;
+  border-radius: 8px;
+  width: 360px;
+  height: 180px;
+}
+.s2-cards--grid2x2 .s2-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+/* Tab 描述文案切换 */
+.s2-desc-item {
+  display: none;
+}
+.s2-desc-item--active {
+  display: block;
 }
 .s2-card {
   position: relative;
@@ -1030,18 +1070,66 @@ a { color: inherit; text-decoration: none; }
   width: auto;
 }
 
-/* — Scene 03 左侧特性 — */
-.s3-features { position: absolute; }
+/* — Scene 03 Tab 面板区域 — */
+.s3-panels {
+  display: block;
+}
+.s3-panel {
+  display: none;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.s3-panel--active {
+  display: block;
+}
+.s3-left {
+  position: absolute;
+  left: 0;
+  top: 16px;
+  width: 260px;
+}
+.s3-right {
+  position: absolute;
+  left: 300px;
+  top: 0;
+  width: 900px;
+}
+.s3-panel-img {
+  display: block;
+  width: 110%;
+  height: auto;
+}
+/* tab2 和 tab4 图片上移 50px */
+.s3-panel[data-panel="1"] .s3-panel-img {
+  margin-top: -50px;
+}
+.s3-panel[data-panel="3"] .s3-panel-img {
+  margin-top: -50px;
+}
+/* Tab5 卡片布局 */
+.s3-right--cards {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+.s3-card-img {
+  flex: 1;
+  min-width: 0;
+  height: auto;
+  border-radius: 12px;
+}
 .s3-feat-title {
   font-family: 'MFHaoYing', 'PingFang SC', sans-serif;
   font-size: 36px;
+  font-weight: 400;
   line-height: 1.2;
   letter-spacing: -0.04em;
   color: #0165F2;
-  margin-bottom: 10px;
+  margin: 0 0 16px 0;
 }
 .s3-feat-desc {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.5;
   letter-spacing: -0.025em;
   color: rgba(255,255,255,.9);
@@ -1050,35 +1138,25 @@ a { color: inherit; text-decoration: none; }
 }
 .s3-feat-list {
   list-style: none;
-  display: flex; flex-direction: column; gap: 10px;
+  display: flex; flex-direction: column; gap: 18px;
+  margin-top: 28px;
 }
 .s3-feat-list li {
   position: relative;
   padding-left: 16px;
-  font-size: 12px;
-  line-height: 31px;
+  font-size: 14px;
+  line-height: 1.5;
   letter-spacing: -0.025em;
   color: rgba(255,255,255,.85);
+  white-space: nowrap;
 }
 .s3-feat-list li::before {
   content: '';
   position: absolute;
-  left: 0; top: 12px;
-  width: 6px; height: 6px;
+  left: 0; top: 6px;
+  width: 7px; height: 7px;
   border-radius: 50%;
   background: #0165F2;
-}
-
-.s3-showcase {
-  position: absolute;
-  border-radius: 0;
-  overflow: hidden;
-}
-.s3-main-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
 }
 
 
@@ -1477,8 +1555,9 @@ a { color: inherit; text-decoration: none; }
   z-index: 2;
 }
 html[lang="en"] .footer-slogan {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Radikal', 'Space Grotesk', sans-serif;
   font-weight: 700;
+  letter-spacing: 0.3px;
 }
 .footer-copy {
   position: absolute;
@@ -1587,7 +1666,7 @@ html[lang="en"] .footer-slogan {
    ========================================================= */
 .side-dots {
   position: fixed;
-  left: 32px;
+  right: 32px;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
@@ -1679,18 +1758,25 @@ html[lang="en"] .hero-title {
   right: 0 !important;
   width: 1920px !important;
   margin: 0 auto;
+  padding-left: 25px;
+  box-sizing: border-box;
+  letter-spacing: 0.1px;
 }
-/* 英文三行间距与中文两行一致（~95px） */
+/* 英文三行：整体上移15px，行间距从95缩至85 */
 html[lang="en"] .hero-title-1 {
-  top: 226px !important;
+  top: 211px !important;
 }
 html[lang="en"] .hero-title-2 {
-  top: 321px !important;
+  top: 296px !important;
 }
 html[lang="en"] .hero-title-3 {
-  top: 416px !important;
+  top: 381px !important;
 }
 /* 英文副标题下移，与大标题拉开间距 */
+/* 英文版：机器人左移15px */
+html[lang="en"] .hero-kv {
+  left: 362.09px;
+}
 /* --- 英文：首屏左侧图标左移、右侧图标右移，减少遮挡 --- */
 html[lang="en"] .hero-icon[data-id="facebook"],
 html[lang="en"] .hero-icon[data-id="telegram"],
@@ -1726,13 +1812,13 @@ html[lang="en"] .nav-lang span {
 
 /* --- 英文：副标题居中于大标题和页面 --- */
 html[lang="en"] .hero-subtitle {
-  top: 520px !important;
+  top: 500px !important;
   white-space: normal !important;
   width: 1920px !important;
   left: 0 !important;
   text-align: center !important;
   transform: none !important;
-  padding: 0 610px;
+  padding: 0 625px 0 595px;
   box-sizing: border-box;
 }
 
@@ -1750,35 +1836,38 @@ html[lang="en"] .hero-stats .stat-desc {
 }
 
 /* --- 英文：Scene1 左侧蓝色小标题加粗 --- */
-html[lang="en"] .s1-bluet {
-  font-weight: 700;
-}
-
-/* --- 英文：Scene1 bullet 列表 dot 对齐第一行 + 行间距缩小 --- */
-html[lang="en"] .s1-bullets li {
-  align-items: flex-start;
-  line-height: 1.6;
-}
-html[lang="en"] .s1-bullets li .s1-dot-blue {
-  margin-top: 6px;
-}
-
-/* --- 英文：Scene1 底部按钮条自适应宽度 --- */
-html[lang="en"] .s1-shot-btnbar {
-  width: auto;
-}
-html[lang="en"] .s1-btn--amber {
-  margin-left: 0;
-}
-
 /* --- 英文：Scene2 Discord icon 左移避免遮挡标题 --- */
 html[lang="en"] .s2-3dicon {
   left: 420px !important;
 }
 
+/* --- 英文：Scene1 社媒管理左侧文案 --- */
+html[lang="en"] .s1-bluet {
+  font-family: 'Radikal', 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+html[lang="en"] .s1-desc {
+  font-family: 'Radikal', 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+}
+html[lang="en"] .s1-bullets li {
+  font-family: 'Radikal', 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+  align-items: flex-start;
+}
+html[lang="en"] .s1-bullets li .s1-dot-blue {
+  margin-top: 6px;
+}
+
 /* --- 英文：所有 scene-title 加粗 --- */
 html[lang="en"] .scene-title {
   font-weight: 700;
+  letter-spacing: 0.1px;
 }
 
 /* --- 英文：Scene2 Tab 居中 --- */
@@ -1800,12 +1889,25 @@ html[lang="en"] #scene5 .scene-title {
 html[lang="en"] .s3-feat-title {
   font-weight: 700;
 }
+html[lang="en"] .s3-panel[data-panel="0"] .s3-left,
+html[lang="en"] .s3-panel[data-panel="1"] .s3-left,
+html[lang="en"] .s3-panel[data-panel="2"] .s3-left,
+html[lang="en"] .s3-panel[data-panel="3"] .s3-left {
+  width: 380px;
+}
+html[lang="en"] .s3-panel[data-panel="0"] .s3-right,
+html[lang="en"] .s3-panel[data-panel="1"] .s3-right,
+html[lang="en"] .s3-panel[data-panel="2"] .s3-right,
+html[lang="en"] .s3-panel[data-panel="3"] .s3-right {
+  left: 330px;
+}
 html[lang="en"] .s3-feat-desc {
   margin-bottom: 20px;
-  max-width: 285px;
+  max-width: 360px;
 }
 html[lang="en"] .s3-feat-list li {
   line-height: 1.6;
+  white-space: normal;
 }
 html[lang="en"] .s3-feat-list li::before {
   top: 7px;
