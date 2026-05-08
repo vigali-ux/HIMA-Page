@@ -9,7 +9,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=20260507v" />
+  <link rel="stylesheet" href="style.css?v=20260508v22" />
   <script>
     // 尽早设置缩放变量，防止 FOUC
     (function(){
@@ -239,39 +239,94 @@
     <div class="scene-tabs scene-tabs--dark" style="left:630px; top:312px; width:660px;">
       <button class="tab active"><span data-i18n="s1-tab1">发帖编辑</span></button>
       <button class="tab"><span data-i18n="s1-tab2">策略排期</span></button>
-      <button class="tab"><span data-i18n="s1-tab3">数据看板</span></button>
-      <button class="tab"><span data-i18n="s1-tab4">更多能力</span></button>
-      <button class="tab"><span data-i18n="s1-tab5">审核工作流</span></button>
+      <button class="tab"><span data-i18n="s1-tab3">审核工作流</span></button>
+      <button class="tab"><span data-i18n="s1-tab4">数据看板</span></button>
+      <button class="tab"><span data-i18n="s1-tab5">更多能力</span></button>
       <span class="tab-indicator"></span>
     </div>
     <div class="scene-tabs-line scene-tabs-line--dark" style="left:360px; top:342px; width:1200px;"></div>
 
-    <!-- ======= 下半部分：左蓝色标题 + 4 条 bullet ======= -->
-    <div class="s1-left" style="left:360px; top:402px; width:260px;">
-      <h3 class="s1-bluet" data-i18n="s1-bluet" data-i18n-html>
-        富文本编辑<br/>一键多发
-      </h3>
-      <ul class="s1-bullets">
-        <li><span class="s1-dot-blue"></span><span data-i18n="s1-b1">支持图文、视频、Reel 多格式</span></li>
-        <li><span class="s1-dot-blue"></span><span data-i18n="s1-b2">AI 翻译 + 多语言一键适配</span></li>
-        <li><span class="s1-dot-blue"></span><span data-i18n="s1-b3">定时 / 定向发布，全球多时区精准覆盖</span></li>
-        <li><span class="s1-dot-blue"></span><span data-i18n="s1-b4">实时预览各平台展示效果</span></li>
-      </ul>
-    </div>
+    <!-- ======= Tab 内容面板区域：左文案 + 右切图 ======= -->
+    <div class="s1-tab-content" style="left:360px; top:402px; width:1200px; height:460px;">
 
-    <!-- ======= 右侧三张配图（主图 + 富文本卡 + 按钮条） ======= -->
-    <div class="s1-shots" style="left:654px; top:402px; width:881px; height:409px;">
-      <!-- 主图：CrossPost 编辑界面 (793 × 399)，偏右上 -->
-      <img class="s1-shot-main" src="assets/scenes/scene2-main.png" alt="CrossPost 编辑器" />
-      <!-- 富文本编辑卡浮在左下 (547 × 172) -->
-      <img class="s1-shot-card" src="assets/scenes/scene2-sub1.png" alt="富文本编辑卡" />
-      <!-- 底部按钮条 (334 × 40) -->
-      <div class="s1-shot-btnbar">
-        <span class="s1-btn s1-btn--ghost" data-i18n="s1-btn1">🏷 标签</span>
-        <span class="s1-btn s1-btn--ghost" data-i18n="s1-btn2">📅 选取时间</span>
-        <span class="s1-btn s1-btn--primary" data-i18n="s1-btn3">⚠ 立即发布</span>
-        <span class="s1-btn s1-btn--amber" data-i18n="s1-btn4">⏩ 添加至队列</span>
+      <!-- Tab1: 发帖编辑 -->
+      <div class="s1-panel s1-panel--active" data-panel="0">
+        <div class="s1-left">
+          <h3 class="s1-bluet" data-i18n="s1-t1-title" data-i18n-html>富文本编辑<br/>一键多发</h3>
+          <ul class="s1-bullets">
+            <li><span class="s1-dot-blue"></span><span data-i18n="s1-t1-b1">支持图文、视频、Reel 多格式</span></li>
+            <li><span class="s1-dot-blue"></span><span data-i18n="s1-t1-b2">AI 翻译 + 多语言一键适配</span></li>
+            <li><span class="s1-dot-blue"></span><span data-i18n="s1-t1-b3">定时 / 定向发布，全球多时区精准覆盖</span></li>
+            <li><span class="s1-dot-blue"></span><span data-i18n="s1-t1-b4">实时预览各平台展示效果</span></li>
+          </ul>
+        </div>
+        <div class="s1-right">
+          <img class="s1-panel-img" src="assets/scenes/tab1-发帖编辑.png" alt="发帖编辑" />
+        </div>
       </div>
+
+      <!-- Tab2: 策略排期 -->
+      <div class="s1-panel" data-panel="1">
+        <div class="s1-left">
+          <h3 class="s1-bluet" data-i18n="s1-t2-title" data-i18n-html>日历式<br/>可视化排期</h3>
+          <p class="s1-desc" data-i18n="s1-t2-desc">快速创建并对齐社媒运营策略，全平台发布计划在同一日历一目了然。</p>
+          <ul class="s1-bullets">
+            <li><span class="s1-dot-blue"></span><span data-i18n="s1-t2-b1">多平台发布计划统一日历展示</span></li>
+            <li><span class="s1-dot-blue"></span><span data-i18n="s1-t2-b2">快速创建任务，对齐团队运营节奏</span></li>
+            <li><span class="s1-dot-blue"></span><span data-i18n="s1-t2-b3">关键词搜索 + 多维筛选</span></li>
+          </ul>
+        </div>
+        <div class="s1-right">
+          <img class="s1-panel-img" src="assets/scenes/tab2-策略排期.png" alt="策略排期" />
+        </div>
+      </div>
+
+      <!-- Tab3: 审核工作流 -->
+      <div class="s1-panel" data-panel="2">
+        <div class="s1-left">
+          <h3 class="s1-bluet" data-i18n="s1-t3-title" data-i18n-html>自定义<br/>多级审批</h3>
+          <p class="s1-desc" data-i18n="s1-t3-desc">支持自定义多级审批流程，操作记录全程可查，企微动态实时通知，内容合规有保障。</p>
+          <ul class="s1-bullets">
+            <li><span class="s1-dot-blue"></span><span data-i18n="s1-t3-b1">自定义审批层级，灵活适配团队流程</span></li>
+            <li><span class="s1-dot-blue"></span><span data-i18n="s1-t3-b2">操作记录全程存档，责任边界清晰</span></li>
+            <li><span class="s1-dot-blue"></span><span data-i18n="s1-t3-b3">企微动态通知，审批进度实时掌握</span></li>
+          </ul>
+        </div>
+        <div class="s1-right">
+          <img class="s1-panel-img" src="assets/scenes/tab3-审核工作流.png" alt="审核工作流" />
+        </div>
+      </div>
+
+      <!-- Tab4: 数据看板 -->
+      <div class="s1-panel" data-panel="3">
+        <div class="s1-left">
+          <h3 class="s1-bluet" data-i18n="s1-t4-title" data-i18n-html>多维数据分析</h3>
+          <p class="s1-desc" data-i18n="s1-t4-desc">支持全平台官号数据统一跟踪，多维分析内容效果，AI 粉丝画像助力精准运营决策。</p>
+          <ul class="s1-bullets">
+            <li><span class="s1-dot-blue"></span><span data-i18n="s1-t4-b1">展现量、互动率、粉丝增长趋势可视化</span></li>
+            <li><span class="s1-dot-blue"></span><span data-i18n="s1-t4-b2">支持 7 天 / 30 天 / 90 天灵活周期对比</span></li>
+            <li><span class="s1-dot-blue"></span><span data-i18n="s1-t4-b3">AI 粉丝画像，精准洞察用户特征</span></li>
+          </ul>
+        </div>
+        <div class="s1-right">
+          <img class="s1-panel-img" src="assets/scenes/tab4-数据看板.png" alt="数据看板" />
+        </div>
+      </div>
+
+      <!-- Tab5: 更多能力 -->
+      <div class="s1-panel" data-panel="4">
+        <div class="s1-left">
+          <h3 class="s1-bluet" data-i18n="s1-t5-title" data-i18n-html>更多能力<br/>建设中</h3>
+          <ul class="s1-bullets">
+            <li><span class="s1-dot-blue"></span><span data-i18n="s1-t5-b1">全平台社媒官号集成收件箱：一站式回复全平台社媒粉丝的评论和私信</span></li>
+            <li><span class="s1-dot-blue"></span><span data-i18n="s1-t5-b2">内容风险预审：文化禁忌、敏感风险前瞻洞察</span></li>
+          </ul>
+        </div>
+        <div class="s1-right">
+          <img class="s1-panel-img" src="assets/scenes/tab5-更多能力.png" alt="更多能力" />
+        </div>
+      </div>
+
     </div>
 
     <!-- 右上角 2 个 3D Icons：Thread / Facebook（叠放，从上方掉落） -->
@@ -294,47 +349,82 @@
     <!-- Discord 大 icon，左上角（掉落 + 漂浮动画） -->
     <div class="s2-icons-row">
       <img class="s2-3dicon" data-drop="0" src="assets/icons/Discord.png" alt="" aria-hidden="true"
-           style="left:580px; top:74px; width:209px; height:206px;" />
+           style="left:580px; top:44px; width:209px; height:206px;" />
     </div>
 
-    <div class="scene-eyebrow" style="left:0; top:164px; width:1920px; text-align:center;">/      Core Scene 02     /</div>
-    <h2 class="scene-title scene-title--dark" data-i18n="s2-title" style="left:0; top:188px; width:1920px; text-align:center;">社区运营</h2>
-    <p class="scene-subtitle scene-subtitle--dark" data-i18n="s2-sub" style="left:0; top:278px; width:1920px;">
+    <div class="scene-eyebrow" style="left:0; top:134px; width:1920px; text-align:center;">/      Core Scene 02     /</div>
+    <h2 class="scene-title scene-title--dark" data-i18n="s2-title" style="left:0; top:158px; width:1920px; text-align:center;">社区运营</h2>
+    <p class="scene-subtitle scene-subtitle--dark" data-i18n="s2-sub" style="left:0; top:248px; width:1920px;">
       司内最强的 Discord 官方私域全场景运营解决方案，助力业务打造全能可控的官方私域社区
     </p>
 
-    <!-- Tab 导航（5 个） -->
-    <div class="scene-tabs scene-tabs--light" style="left:667px; top:358px; width:586px;">
+    <!-- Tab 导航（4 个） -->
+    <div class="scene-tabs scene-tabs--light" style="left:667px; top:318px; width:586px;">
       <button class="tab active"><span data-i18n="s2-tab1">游戏账号绑定</span></button>
       <button class="tab"><span data-i18n="s2-tab2">端内数据查询</span></button>
       <button class="tab"><span data-i18n="s2-tab3">定制营销活动</span></button>
       <button class="tab"><span data-i18n="s2-tab4">更多能力</span></button>
       <span class="tab-indicator"></span>
     </div>
-    <div class="scene-tabs-line scene-tabs-line--light" style="left:360px; top:388px; width:1200px;"></div>
+    <div class="scene-tabs-line scene-tabs-line--light" style="left:360px; top:348px; width:1200px;"></div>
 
-    <!-- Tab 下方描述文字 -->
-    <p class="scene-desc scene-desc--dark" data-i18n="s2-desc" style="left:0; top:448px; width:1920px; text-align:center;">
+    <!-- Tab 下方描述文字（每个tab不同） -->
+    <p class="scene-desc scene-desc--dark s2-desc-item s2-desc-item--active" data-desc-panel="0" data-i18n="s2-desc1" style="left:0; top:388px; width:1920px; text-align:center;">
       Discord 服务器内一键绑定游戏账号，绑定成功即触发权益发放，深度打通游戏与社区生态
     </p>
+    <p class="scene-desc scene-desc--dark s2-desc-item" data-desc-panel="1" data-i18n="s2-desc2" style="left:0; top:388px; width:1920px; text-align:center;">
+      玩家在Discrod内可直接查询游戏数据，分享战绩，促进社交裂变
+    </p>
+    <p class="scene-desc scene-desc--dark s2-desc-item" data-desc-panel="2" data-i18n="s2-desc3" style="left:0; top:388px; width:1920px; text-align:center;">
+      签到、抽奖、排行榜、CDK 兑换，低成本配置，支持快速复开
+    </p>
+    <p class="scene-desc scene-desc--dark s2-desc-item" data-desc-panel="3" data-i18n="s2-desc4" style="left:0; top:388px; width:1920px; text-align:center;">
+      成员成长激励、AI 智能客服、开黑 Bot、添加游戏好友等全场景能力
+    </p>
 
-    <!-- 4 张深色功能卡（真实设计截图） -->
-    <div class="s2-cards" style="left:360px; top:490px; width:1200px; height:370px;">
-      <!-- 卡 1：成员成长激励 -->
-      <div class="s2-card stagger-item">
-        <img class="s2-card-img" src="assets/第三屏内容图/成员成长激励.png" alt="成员成长激励" />
+    <!-- Tab 内容区域 -->
+    <div class="s2-tab-content" style="left:360px; top:430px; width:1200px; height:460px;">
+      <!-- Tab1: 游戏账号绑定 — 视频 -->
+      <div class="s2-panel s2-panel--active" data-panel="0">
+        <video class="s2-video" src="assets/discord_bind_compressed.mp4" autoplay loop muted playsinline></video>
       </div>
-      <!-- 卡 2：AI 智能客服 -->
-      <div class="s2-card stagger-item">
-        <img class="s2-card-img" src="assets/第三屏内容图/AI智能客服.png" alt="AI 智能客服" />
+      <!-- Tab2: 端内数据查询 — 视频 -->
+      <div class="s2-panel" data-panel="1">
+        <video class="s2-video" src="assets/discord_data_query_compressed.mp4" autoplay loop muted playsinline></video>
       </div>
-      <!-- 卡 3：开黑 Bot -->
-      <div class="s2-card stagger-item">
-        <img class="s2-card-img" src="assets/第三屏内容图/开黑Bot.png" alt="开黑 Bot" />
+      <!-- Tab3: 定制营销活动 — 图片 -->
+      <div class="s2-panel" data-panel="2">
+        <div class="s2-cards">
+          <div class="s2-card stagger-item">
+            <img class="s2-card-img" src="assets/第三屏tab3配图/1.png" alt="营销活动1" />
+          </div>
+          <div class="s2-card stagger-item">
+            <img class="s2-card-img" src="assets/第三屏tab3配图/2.png" alt="营销活动2" />
+          </div>
+          <div class="s2-card stagger-item">
+            <img class="s2-card-img" src="assets/第三屏tab3配图/3.png" alt="营销活动3" />
+          </div>
+          <div class="s2-card stagger-item">
+            <img class="s2-card-img" src="assets/第三屏tab3配图/4.png" alt="营销活动4" />
+          </div>
+        </div>
       </div>
-      <!-- 卡 4：添加游戏好友 -->
-      <div class="s2-card stagger-item">
-        <img class="s2-card-img" src="assets/第三屏内容图/添加游戏好友.png" alt="添加游戏好友" />
+      <!-- Tab4: 更多能力 — 2x2 网格布局 -->
+      <div class="s2-panel" data-panel="3">
+        <div class="s2-cards s2-cards--grid2x2">
+          <div class="s2-card stagger-item">
+            <img class="s2-card-img" src="assets/第三屏tab4配图/1.png" alt="成员成长激励" />
+          </div>
+          <div class="s2-card stagger-item">
+            <img class="s2-card-img" src="assets/第三屏tab4配图/2.png" alt="AI 智能客服" />
+          </div>
+          <div class="s2-card stagger-item">
+            <img class="s2-card-img" src="assets/第三屏tab4配图/3.png" alt="开黑 Bot" />
+          </div>
+          <div class="s2-card stagger-item">
+            <img class="s2-card-img" src="assets/第三屏tab4配图/4.png" alt="添加游戏好友" />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -358,30 +448,97 @@
       <img src="assets/第四屏胶囊容器-中文.png" alt="平台icons" class="s3-plat-bar-img" />
     </div>
 
-    <!-- Tab 导航（4 个） -->
-    <div class="scene-tabs scene-tabs--dark" style="left:689px; top:326px; width:542px;">
+    <!-- Tab 导航（5 个） -->
+    <div class="scene-tabs scene-tabs--dark" style="left:50%; top:326px; transform:translateX(-50%); width:auto;">
       <button class="tab active"><span data-i18n="s3-tab1">直播间掉宝</span></button>
       <button class="tab"><span data-i18n="s3-tab2">互动挂件</span></button>
       <button class="tab"><span data-i18n="s3-tab3">主播挑战活动</span></button>
-      <button class="tab"><span data-i18n="s3-tab4">更多能力</span></button>
+      <button class="tab"><span data-i18n="s3-tab4">AI直播高光识别</span></button>
+      <button class="tab"><span data-i18n="s3-tab5">更多能力</span></button>
       <span class="tab-indicator"></span>
     </div>
     <div class="scene-tabs-line scene-tabs-line--dark" style="left:360px; top:356px; width:1200px;"></div>
 
-    <!-- 左侧「互动挑战」特性点 -->
-    <div class="s3-features" style="left:360px; top:416px; width:285px;">
-      <div class="s3-feat-title" data-i18n="s3-ft" data-i18n-html>玩家与主播<br/>互动挑战</div>
-      <div class="s3-feat-desc" data-i18n="s3-fd">基于 Twitch Extension 等能力，开发 Streamer Challenge 等玩家与主播的互动挑战任务。</div>
-      <ul class="s3-feat-list">
-        <li data-i18n="s3-f1">主播与玩家联动，提升直播互动深度</li>
-        <li data-i18n="s3-f2">Player / Streamer Challenge 双轨并行</li>
-        <li data-i18n="s3-f3">任务奖励机制驱动持续参与</li>
-      </ul>
-    </div>
+    <!-- Tab 内容面板区域（和 scene1 结构一致） -->
+    <div class="s3-panels" style="position:absolute; left:360px; top:400px; width:1200px; height:460px;">
 
-    <!-- 右侧大图卡片（设计截图） -->
-    <div class="s3-showcase" style="left:672px; top:416px; width:800px; height:415px;">
-      <img class="s3-main-img" src="assets/第四屏内容图.png" alt="直播运营" />
+      <!-- Tab1: 直播间掉宝 -->
+      <div class="s3-panel s3-panel--active" data-panel="0">
+        <div class="s3-left">
+          <h3 class="s3-feat-title" data-i18n="s3-t1-title" data-i18n-html>Drops<br/>活动配置</h3>
+          <p class="s3-feat-desc" data-i18n="s3-t1-desc">支持 Twitch、CHZZK、Mirrativ、Tiktok 等平台的直播间掉宝 Drops 活动，多平台统一配置管理。</p>
+          <ul class="s3-feat-list">
+            <li data-i18n="s3-t1-b1">多平台 Drops 活动统一配置管理</li>
+            <li data-i18n="s3-t1-b2">灵活设置掉宝条件、观看时长与奖励内容</li>
+            <li data-i18n="s3-t1-b3">账户关联验证，奖励精准发放</li>
+          </ul>
+        </div>
+        <div class="s3-right">
+          <img class="s3-panel-img" src="assets/scenes-s3/tab1-直播间掉宝.png" alt="直播间掉宝" />
+        </div>
+      </div>
+
+      <!-- Tab2: 互动挂件 -->
+      <div class="s3-panel" data-panel="1">
+        <div class="s3-left">
+          <h3 class="s3-feat-title" data-i18n="s3-t2-title" data-i18n-html>直播间<br/>互动营销</h3>
+          <p class="s3-feat-desc" data-i18n="s3-t2-desc">基于 Twitch Extension 在直播间增加互动网页，衍生丰富的拉新、促活、拉收互动营销玩法。</p>
+          <ul class="s3-feat-list">
+            <li data-i18n="s3-t2-b1">低门槛配置互动挂件，快速上线</li>
+            <li data-i18n="s3-t2-b2">覆盖拉新、促活、增收多种营销目标</li>
+            <li data-i18n="s3-t2-b3">玩家直播间内实时参与，互动体验无缝</li>
+          </ul>
+        </div>
+        <div class="s3-right">
+          <img class="s3-panel-img" src="assets/scenes-s3/tab2-互动挂件.png" alt="互动挂件" />
+        </div>
+      </div>
+
+      <!-- Tab3: 主播挑战活动 -->
+      <div class="s3-panel" data-panel="2">
+        <div class="s3-left">
+          <h3 class="s3-feat-title" data-i18n="s3-t3-title" data-i18n-html>玩家与主播<br/>互动挑战</h3>
+          <p class="s3-feat-desc" data-i18n="s3-t3-desc">基于 Twitch Extension 等能力，开发 Streamer Challenge 等玩家与主播的互动挑战任务。</p>
+          <ul class="s3-feat-list">
+            <li data-i18n="s3-t3-b1">主播与玩家联动，提升直播互动深度</li>
+            <li data-i18n="s3-t3-b2">Player / Streamer Challenge 双轨并行</li>
+            <li data-i18n="s3-t3-b3">任务奖励机制驱动持续参与</li>
+          </ul>
+        </div>
+        <div class="s3-right">
+          <img class="s3-panel-img" src="assets/scenes-s3/tab3-主播挑战活动.png" alt="主播挑战活动" />
+        </div>
+      </div>
+
+      <!-- Tab4: AI直播高光识别 -->
+      <div class="s3-panel" data-panel="3">
+        <div class="s3-left">
+          <h3 class="s3-feat-title" data-i18n="s3-t4-title" data-i18n-html>AI直播<br/>高光识别</h3>
+          <p class="s3-feat-desc" data-i18n="s3-t4-desc">自动识别高光时刻，一键生成切片与内容总结，弹幕分析 + 数据报告自动生成</p>
+          <ul class="s3-feat-list">
+            <li data-i18n="s3-t4-point1">无需接入SDK、支持多语种主播场景</li>
+            <li data-i18n="s3-t4-point2">可支持弹幕舆情分析</li>
+            <li data-i18n="s3-t4-point3">可支持主播对白翻译</li>
+          </ul>
+        </div>
+        <div class="s3-right">
+          <img class="s3-panel-img" src="assets/scenes-s3/tab4-AI直播高光识别.png" alt="AI直播高光识别" />
+        </div>
+      </div>
+
+      <!-- Tab5: 更多能力 -->
+      <div class="s3-panel" data-panel="4">
+        <div class="s3-left">
+          <h3 class="s3-feat-title" data-i18n="s3-t5-title" data-i18n-html>直播运营<br/>全链路支持</h3>
+          <p class="s3-feat-desc" data-i18n="s3-t5-desc">从直播排期规划到 AI 高光内容生产，让直播运营更高效、更智能。</p>
+        </div>
+        <div class="s3-right s3-right--cards">
+          <!-- tab5-卡片1 -->
+          <img class="s3-card-img" src="assets/scenes-s3/tab5-卡片1.png" alt="直播策略排期" data-i18n-src="s3-t5-card1-img" />
+          <!-- tab5-卡片2 -->
+          <img class="s3-card-img" src="assets/scenes-s3/tab5-卡片2.png" alt="直播数据分析" data-i18n-src="s3-t5-card2-img" />
+        </div>
+      </div>
 
     </div>
 
@@ -455,12 +612,12 @@
   <div class="scene-canvas" style="height:1920px;">
 
     <h2 class="scene-title scene-title--dark" data-i18n="s5-title" style="left:857px; top:186px;">合作游戏</h2>
-    <p class="scene-subtitle scene-subtitle--dark" data-i18n="s5-sub" style="left:0; top:280px; width:1920px;">
+    <p class="scene-subtitle scene-subtitle--dark" data-i18n="s5-sub" style="left:0; top:256px; width:1920px;">
       深度接入游戏生态，实现平台与游戏的无缝联动，持续扩展合作版图，更多游戏陆续接入中
     </p>
 
     <!-- 合作游戏卡片：整张设计稿切图 -->
-    <img class="games-wall-img" src="assets/合作游戏卡片.png" alt="合作游戏" style="position:absolute; left:288px; top:360px; width:1344px; height:auto;" />
+    <img class="games-wall-img" src="assets/合作游戏卡片.png" alt="合作游戏" style="position:absolute; left:288px; top:296px; width:1344px; height:auto;" />
   </div>
 </section>
 
@@ -526,6 +683,6 @@
 </footer>
 </div><!-- /.shared-bg-wrap -->
 
-<script src="app.js?v=20260430d"></script>
+<script src="app.js?v=20260508v4"></script>
 </body>
 </html>
