@@ -72,6 +72,43 @@ if (window.gsap) {
   });
 }
 
+// ========= 2.1 Hero 首屏整体跟随鼠标位移 =========
+const heroCanvas = document.querySelector('.hero-canvas');
+const heroFollowLayer = document.querySelector('.hero-follow-layer');
+if (heroCanvas && heroFollowLayer) {
+  const maxMoveX = 26;
+  const maxMoveY = 18;
+  let rafId = 0;
+  let targetX = 0;
+  let targetY = 0;
+
+  const applyHeroFollow = () => {
+    heroFollowLayer.style.setProperty('--hero-follow-x', `${targetX.toFixed(2)}px`);
+    heroFollowLayer.style.setProperty('--hero-follow-y', `${targetY.toFixed(2)}px`);
+    rafId = 0;
+  };
+
+  const updateHeroFollow = (ev) => {
+    const rect = heroCanvas.getBoundingClientRect();
+    const relX = (ev.clientX - rect.left) / rect.width - 0.5;
+    const relY = (ev.clientY - rect.top) / rect.height - 0.5;
+    targetX = relX * 2 * maxMoveX;
+    targetY = relY * 2 * maxMoveY;
+    heroCanvas.classList.add('hero-following');
+    if (!rafId) rafId = requestAnimationFrame(applyHeroFollow);
+  };
+
+  const resetHeroFollow = () => {
+    targetX = 0;
+    targetY = 0;
+    heroCanvas.classList.remove('hero-following');
+    if (!rafId) rafId = requestAnimationFrame(applyHeroFollow);
+  };
+
+  heroCanvas.addEventListener('pointermove', updateHeroFollow);
+  heroCanvas.addEventListener('pointerleave', resetHeroFollow);
+}
+
 // ========= 3. 滚动渐入上移 · section & 卡片交错 =========
 // 3.1 给需要交错的卡片加 .stagger-item 并设置自定义延迟
 const attachStagger = () => {
