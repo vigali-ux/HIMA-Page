@@ -181,6 +181,13 @@ a { color: inherit; text-decoration: none; }
   align-items: center;
   gap: 48px;
 }
+html[lang="zh-CN"] .nav-menu {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  gap: 86px;
+}
 .nav-menu .nav-link {
   font-size: 16px;
   font-weight: 500;
@@ -758,7 +765,7 @@ a { color: inherit; text-decoration: none; }
 }
 .s1-bullets li {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   font-family: 'PingFang SC', sans-serif;
   font-size: 14px;
@@ -772,6 +779,7 @@ a { color: inherit; text-decoration: none; }
   border-radius: 50%;
   background: #0165F2;
   flex-shrink: 0;
+  margin-top: 12px;
 }
 .s1-right {
   flex: 1;
