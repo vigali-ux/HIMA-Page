@@ -82,8 +82,6 @@ const attachStagger = () => {
     { selector: '#scene4 .s4-plat', step: 70 },
     // Scene5 合作游戏 整图渐入
     { selector: '#scene5 .games-wall-img', step: 0 },
-    // Scene1 左侧 bullet 列表
-    { selector: '#scene1 .s1-bullets li', step: 90 },
     // Scene1 标题下平台 logo 条
     { selector: '#scene1 .s1-plat-bar img', step: 80 },
     // Scene3 左侧特性列表
@@ -231,11 +229,64 @@ const initTabSwitcher = () => {
     }
 
     // 点击切换
-    tabs.forEach((tab) => {
+    tabs.forEach((tab, idx) => {
       tab.addEventListener('click', () => {
         tabs.forEach((t) => t.classList.remove('active'));
         tab.classList.add('active');
         moveIndicator(tab);
+
+        const section = tabGroup.closest('section');
+
+        // Scene1 社媒管理 面板内容切换
+        if (section && section.id === 'scene1') {
+          const panels = section.querySelectorAll('.s1-panel');
+          panels.forEach((panel, i) => {
+            if (i === idx) {
+              panel.classList.add('s1-panel--active');
+            } else {
+              panel.classList.remove('s1-panel--active');
+            }
+          });
+        }
+
+        // Scene3 直播运营 面板内容切换
+        if (section && section.id === 'scene3') {
+          const panels = section.querySelectorAll('.s3-panel');
+          panels.forEach((panel, i) => {
+            if (i === idx) {
+              panel.classList.add('s3-panel--active');
+            } else {
+              panel.classList.remove('s3-panel--active');
+            }
+          });
+        }
+
+        // Scene2 面板内容切换
+        if (section && section.id === 'scene2') {
+          const panels = section.querySelectorAll('.s2-panel');
+          panels.forEach((panel, i) => {
+            if (i === idx) {
+              panel.classList.add('s2-panel--active');
+              // 恢复视频播放
+              const video = panel.querySelector('.s2-video');
+              if (video) video.play();
+            } else {
+              panel.classList.remove('s2-panel--active');
+              // 暂停非当前面板的视频
+              const video = panel.querySelector('.s2-video');
+              if (video) video.pause();
+            }
+          });
+          // 切换 tab 描述文案
+          const descs = section.querySelectorAll('.s2-desc-item');
+          descs.forEach((desc, i) => {
+            if (i === idx) {
+              desc.classList.add('s2-desc-item--active');
+            } else {
+              desc.classList.remove('s2-desc-item--active');
+            }
+          });
+        }
       });
     });
   });
@@ -333,14 +384,41 @@ const i18n = {
     's1-btn1': '🏷 标签', 's1-btn2': '📅 选取时间', 's1-btn3': '⚠ 立即发布', 's1-btn4': '⏩ 添加至队列',
     's2-title': '社区运营', 's2-sub': '司内最强的 Discord 官方私域全场景运营解决方案，助力业务打造全能可控的官方私域社区',
     's2-desc': 'Discord 服务器内一键绑定游戏账号，绑定成功即触发权益发放，深度打通游戏与社区生态',
-    's2-tab1': '游戏账号绑定', 's2-tab2': '内容管理', 's2-tab3': '端内数据查询', 's2-tab4': '定制营销活动', 's2-tab5': '更多能力',
+    's2-desc1': 'Discord 服务器内一键绑定游戏账号，绑定成功即触发权益发放，深度打通游戏与社区生态',
+    's2-desc2': '玩家在Discrod内可直接查询游戏数据，分享战绩，促进社交裂变',
+    's2-desc3': '签到、抽奖、排行榜、CDK 兑换，低成本配置，支持快速复开',
+    's2-desc4': '成员成长激励、AI 智能客服、开黑 Bot、添加游戏好友等全场景能力',
+    's2-tab1': '游戏账号绑定', 's2-tab2': '端内数据查询', 's2-tab3': '定制营销活动', 's2-tab4': '更多能力',
     's3-title': '直播运营', 's3-sub': '支持主流海外直播平台的丰富营销能力，覆盖掉宝、互动挂件、主播挑战、AI 高光识别',
-    's3-tab1': '直播间掉宝', 's3-tab2': '互动挂件', 's3-tab3': '主播挑战活动', 's3-tab4': '更多能力',
-    's3-ft': '玩家与主播<br/>互动挑战',
-    's3-fd': '基于 Twitch Extension 等能力，开发 Streamer Challenge 等玩家与主播的互动挑战任务。',
-    's3-f1': '主播与玩家联动，提升直播互动深度',
-    's3-f2': 'Player / Streamer Challenge 双轨并行',
-    's3-f3': '任务奖励机制驱动持续参与',
+    's3-tab1': '直播间掉宝', 's3-tab2': '互动挂件', 's3-tab3': '主播挑战活动', 's3-tab4': 'AI直播高光识别', 's3-tab5': '更多能力',
+    's3-t1-title': 'Drops<br/>活动配置',
+    's3-t1-desc': '支持 Twitch、CHZZK、Mirrativ、Tiktok 等平台的直播间掉宝 Drops 活动，多平台统一配置管理。',
+    's3-t1-b1': '多平台 Drops 活动统一配置管理',
+    's3-t1-b2': '灵活设置掉宝条件、观看时长与奖励内容',
+    's3-t1-b3': '账户关联验证，奖励精准发放',
+    's3-t2-title': '直播间<br/>互动营销',
+    's3-t2-desc': '基于 Twitch Extension 在直播间增加互动网页，衍生丰富的拉新、促活、拉收互动营销玩法。',
+    's3-t2-b1': '低门槛配置互动挂件，快速上线',
+    's3-t2-b2': '覆盖拉新、促活、增收多种营销目标',
+    's3-t2-b3': '玩家直播间内实时参与，互动体验无缝',
+    's3-t3-title': '玩家与主播<br/>互动挑战',
+    's3-t3-desc': '基于 Twitch Extension 等能力，开发 Streamer Challenge 等玩家与主播的互动挑战任务。',
+    's3-t3-b1': '主播与玩家联动，提升直播互动深度',
+    's3-t3-b2': 'Player / Streamer Challenge 双轨并行',
+    's3-t3-b3': '任务奖励机制驱动持续参与',
+    's3-t4-title': 'AI直播<br/>高光识别',
+    's3-t4-desc': '自动识别高光时刻，一键生成切片与内容总结，弹幕分析 + 数据报告自动生成',
+    's3-t4-point1': '无需接入SDK、支持多语种主播场景',
+    's3-t4-point2': '可支持弹幕舆情分析',
+    's3-t4-point3': '可支持主播对白翻译',
+    's3-t4-b1': '',
+    's3-t4-b2': '',
+    's3-t4-b3': '',
+    's3-t5-title': '更多能力<br/>持续扩展',
+    's3-t5-desc': '持续集成更多直播运营工具与能力。',
+    's3-t5-b1': '更多直播平台接入中',
+    's3-t5-b2': '数据报表与复盘分析',
+    's3-t5-b3': '自动化运营流程编排',
     's4-title': '私信营销', 's4-sub': '海外用户全域精准触达，助力业务拉新、召回、促活、增收',
     's4-tag1': '定时推送', 's4-fd1': '支持全球多时区定时推送，精准覆盖目标用户活跃时段',
     's4-tag2': '定向推送', 's4-fd2': '支持指定号码包定向推送，精细化触达目标用户群体',
@@ -364,22 +442,72 @@ const i18n = {
     'stat-t4': 'Languages', 'stat-d4': 'CN, EN, JP, KR, DE and more Multi-language localized operations & delivery',
     's1-title': 'Social Media Management', 's1-sub': 'Covering all major global social media platforms with integrated posting, engagement and analytics solutions',
     's1-more': 'More platforms coming',
-    's1-tab1': 'Post Editor', 's1-tab2': 'Scheduling', 's1-tab3': 'Dashboard', 's1-tab4': 'More Features', 's1-tab5': 'Review Workflow',
+    's1-tab1': 'Post Editor', 's1-tab2': 'Scheduling', 's1-tab3': 'Review Workflow', 's1-tab4': 'Dashboard', 's1-tab5': 'More Features',
     's1-bluet': 'Rich Text Editor<br/>One-Click Multi-Post',
     's1-b1': 'Supports image, video, Reel and more formats', 's1-b2': 'AI translation + one-click multi-language adaptation',
     's1-b3': 'Scheduled / targeted posting across global time zones', 's1-b4': 'Real-time preview across all platforms',
     's1-btn1': '🏷 Tags', 's1-btn2': '📅 Schedule', 's1-btn3': '⚠ Publish Now', 's1-btn4': '⏩ Add to Queue',
+    's1-t1-title': 'Rich Text Editor<br/>One-Click Multi-Post',
+    's1-t1-b1': 'Supports image, video, Reel and more formats',
+    's1-t1-b2': 'AI translation + one-click multi-language adaptation',
+    's1-t1-b3': 'Scheduled / targeted posting across global time zones',
+    's1-t1-b4': 'Real-time preview across all platforms',
+    's1-t2-title': 'Calendar-<br/>Based Visual<br/>Scheduling',
+    's1-t2-desc': 'Quickly create and align social media strategies — all platform schedules unified in a single calendar view.',
+    's1-t2-b1': 'Unified calendar view for multi-platform schedules',
+    's1-t2-b2': 'Quickly create tasks and align team cadence',
+    's1-t2-b3': 'Keyword search + multi-dimensional filtering',
+    's1-t3-title': 'Custom<br/>Multi-Level Approval',
+    's1-t3-desc': 'Custom multi-level approval workflows with full audit trails, WeCom real-time notifications, and content compliance assurance.',
+    's1-t3-b1': 'Custom approval tiers flexibly adapting to team processes',
+    's1-t3-b2': 'Full operation history archived with clear accountability',
+    's1-t3-b3': 'WeCom real-time notifications for approval progress',
+    's1-t4-title': 'Multi-Dimensional<br/>Data Analytics',
+    's1-t4-desc': 'Unified tracking across all official accounts, multi-dimensional content analysis, and AI audience profiling for precision operations.',
+    's1-t4-b1': 'Impressions, engagement, follower growth visualization',
+    's1-t4-b2': 'Flexible period comparison: 7 / 30 / 90 days',
+    's1-t4-b3': 'AI audience profiling for precise user insights',
+    's1-t5-title': 'More Capabilities<br/>Coming Soon',
+    's1-t5-b1': 'Unified social inbox: reply to comments & DMs across all platforms in one place',
+    's1-t5-b2': 'Content risk pre-review: proactive detection of cultural taboos & sensitive risks',
     's2-title': 'Community Operations', 's2-sub': 'The most powerful Discord community operations solution, empowering fully-controlled official community management',
     's2-desc': 'One-click game account binding within Discord servers — upon successful binding, rewards are automatically issued, deeply connecting gaming and community ecosystems',
-    's2-tab1': 'Account Binding', 's2-tab2': 'Content Mgmt', 's2-tab3': 'In-Game Data', 's2-tab4': 'Custom Campaigns', 's2-tab5': 'More Features',
+    's2-desc1': 'One-click game account binding within Discord servers — upon successful binding, rewards are automatically issued, deeply connecting gaming and community ecosystems',
+    's2-desc2': 'Players can directly query game data within Discord, share achievements, and drive social virality',
+    's2-desc3': 'Check-in, lottery, leaderboard, CDK redemption — low-cost configuration with quick re-launch support',
+    's2-desc4': 'Member growth incentives, AI smart customer service, team-up Bot, add game friends and more full-scenario capabilities',
+    's2-tab1': 'Game Account Binding', 's2-tab2': 'In-App Data Query', 's2-tab3': 'Custom Marketing Campaigns', 's2-tab4': 'More Features',
     's3-title': 'Live Streaming', 's3-sub': 'Rich marketing capabilities across major overseas streaming platforms — drops, widgets, streamer challenges, AI highlights',
     's3-more': 'More platforms coming',
-    's3-tab1': 'Live Drops', 's3-tab2': 'Widgets', 's3-tab3': 'Streamer Challenge', 's3-tab4': 'More Features',
-    's3-ft': 'Player & Streamer<br/>Interactive Challenge',
-    's3-fd': 'Built on Twitch Extension and more, enabling Streamer Challenge and interactive quests between players and streamers.',
-    's3-f1': 'Streamer-player synergy for deeper live engagement',
-    's3-f2': 'Dual-track Player / Streamer Challenge system',
-    's3-f3': 'Quest reward mechanism driving sustained participation',
+    's3-tab1': 'Live Drops', 's3-tab2': 'Widgets', 's3-tab3': 'Streamer Challenge', 's3-tab4': 'AI Highlights', 's3-tab5': 'More Features',
+    's3-t1-title': 'Drops<br/>Campaign Setup',
+    's3-t1-desc': 'Manage Drops campaigns across Twitch, CHZZK, Mirrativ, Tiktok and more from a single dashboard.',
+    's3-t1-b1': 'Unified multi-platform Drops configuration',
+    's3-t1-b2': 'Flexible watch-time conditions & reward settings',
+    's3-t1-b3': 'Account linking verification, precise reward delivery',
+    's3-t2-title': 'Live Stream<br/>Interactive Marketing',
+    's3-t2-desc': 'Add interactive web pages to live streams via Twitch Extension, enabling diverse marketing tactics for acquisition, engagement, and monetization.',
+    's3-t2-b1': 'Low-barrier widget setup, quick to launch',
+    's3-t2-b2': 'Covers acquisition, engagement, and revenue goals',
+    's3-t2-b3': 'Real-time in-stream participation, seamless experience',
+    's3-t3-title': 'Player & Streamer<br/>Interactive Challenge',
+    's3-t3-desc': 'Built on Twitch Extension and more, enabling Streamer Challenge and interactive quests between players and streamers.',
+    's3-t3-b1': 'Streamer-player synergy for deeper live engagement',
+    's3-t3-b2': 'Dual-track Player / Streamer Challenge system',
+    's3-t3-b3': 'Quest reward mechanism driving sustained participation',
+    's3-t4-title': 'AI Live<br/>Highlight Detection',
+    's3-t4-desc': 'Automatically identify highlight moments, generate clips and content summaries with one click. Barrage analysis + data reports auto-generated.',
+    's3-t4-point1': 'No SDK integration required; supports multi-language streamer scenarios',
+    's3-t4-point2': 'Supports barrage sentiment analysis',
+    's3-t4-point3': 'Supports streamer dialogue translation',
+    's3-t4-b1': '',
+    's3-t4-b2': '',
+    's3-t4-b3': '',
+    's3-t5-title': 'More Features<br/>Coming Soon',
+    's3-t5-desc': 'Continuously integrating more live streaming tools and capabilities.',
+    's3-t5-b1': 'More streaming platforms being integrated',
+    's3-t5-b2': 'Data reports and post-stream analysis',
+    's3-t5-b3': 'Automated operational workflow orchestration',
     's4-title': 'Direct Messaging', 's4-sub': 'Precision reach across all overseas user touchpoints — acquisition, re-engagement, activation and revenue growth',
     's4-tag1': 'Scheduled Push', 's4-fd1': 'Multi-timezone scheduled push for precise coverage of peak user activity',
     's4-tag2': 'Targeted Push', 's4-fd2': 'Audience-specific targeted push for refined user segment reach',
@@ -423,12 +551,20 @@ function switchLang(lang) {
   // 更新 html lang 属性
   document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
 
-  // 英文版替换社区运营四张内容图
-  const s2CardImgs = document.querySelectorAll('.s2-card-img');
-  const s2ZhSrcs = ['assets/第三屏内容图/成员成长激励.png', 'assets/第三屏内容图/AI智能客服.png', 'assets/第三屏内容图/开黑Bot.png', 'assets/第三屏内容图/添加游戏好友.png'];
-  const s2EnSrcs = ['assets/第三屏内容图-英文/1.png', 'assets/第三屏内容图-英文/2.png', 'assets/第三屏内容图-英文/3.png', 'assets/第三屏内容图-英文/4.png'];
-  s2CardImgs.forEach((img, i) => {
-    if (i < 4) img.src = lang === 'en' ? s2EnSrcs[i] : s2ZhSrcs[i];
+  // 英文版替换社区运营面板中的内容图（Tab3 & Tab4）
+  // Tab3: 定制营销活动 (data-panel="2") — 4张卡片
+  const s2Tab3Imgs = document.querySelectorAll('#scene2 [data-panel="2"] .s2-card-img');
+  const s2Tab3Zh = ['assets/第三屏tab3配图/1.png?v=20260508', 'assets/第三屏tab3配图/2.png?v=20260508', 'assets/第三屏tab3配图/3.png?v=20260508', 'assets/第三屏tab3配图/4.png?v=20260508'];
+  const s2Tab3En = ['assets/第三屏tab3配图/1-英.png?v=20260508', 'assets/第三屏tab3配图/2-英.png?v=20260508', 'assets/第三屏tab3配图/3-英.png?v=20260508', 'assets/第三屏tab3配图/4-英.png?v=20260508'];
+  s2Tab3Imgs.forEach((img, i) => {
+    img.src = lang === 'en' ? s2Tab3En[i] : s2Tab3Zh[i];
+  });
+  // Tab4: 更多能力 (data-panel="3") — 4张卡片
+  const s2Tab4Imgs = document.querySelectorAll('#scene2 [data-panel="3"] .s2-card-img');
+  const s2Tab4Zh = ['assets/第三屏tab4配图/1.png', 'assets/第三屏tab4配图/2.png', 'assets/第三屏tab4配图/3.png', 'assets/第三屏tab4配图/4.png'];
+  const s2Tab4En = ['assets/第三屏tab4配图/1-英.png', 'assets/第三屏tab4配图/2-英.png', 'assets/第三屏tab4配图/3-英.png', 'assets/第三屏tab4配图/4-英.png'];
+  s2Tab4Imgs.forEach((img, i) => {
+    img.src = lang === 'en' ? s2Tab4En[i] : s2Tab4Zh[i];
   });
 
   // 英文版替换私信营销右侧图片
@@ -442,6 +578,14 @@ function switchLang(lang) {
   if (s3PlatImg) {
     s3PlatImg.src = lang === 'en' ? 'assets/第四屏胶囊容器-英文.png' : 'assets/第四屏胶囊容器-中文.png';
   }
+
+  // 英文版替换直播运营 Tab5 卡片图
+  const s3Tab5Cards = document.querySelectorAll('#scene3 [data-panel="4"] .s3-card-img');
+  const s3Tab5Zh = ['assets/scenes-s3/tab5-卡片1.png', 'assets/scenes-s3/tab5-卡片2.png'];
+  const s3Tab5En = ['assets/scenes-s3/tab5-卡片1英文.png', 'assets/scenes-s3/tab5-卡片2英文.png'];
+  s3Tab5Cards.forEach((img, i) => {
+    img.src = lang === 'en' ? s3Tab5En[i] : s3Tab5Zh[i];
+  });
 
   // 重新初始化 Tab 指示条位置
   if (typeof initTabSwitcher === 'function') initTabSwitcher();
