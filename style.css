@@ -1755,13 +1755,32 @@ html[lang="en"] .hero-title-3 {
 html[lang="en"] .hero-kv {
   left: 362.09px;
 }
-/* --- 英文：首屏左侧图标左移、右侧图标右移，减少遮挡 --- */
+/* --- 中文：首屏左侧图标微调 --- */
+.hero-icon[data-id="telegram"] {
+  margin-top: -50px !important;
+  margin-left: 60px !important;
+}
+.hero-icon[data-id="facebook"],
+.hero-icon[data-id="slack"],
+.hero-icon[data-id="instagram"] {
+  margin-left: 60px !important;
+}
+.hero-icon[data-id="youtube"] {
+  margin-left: -30px !important;
+}
+/* --- 英文：首屏图标位置调整 --- */
 html[lang="en"] .hero-icon[data-id="facebook"],
 html[lang="en"] .hero-icon[data-id="telegram"],
 html[lang="en"] .hero-icon[data-id="slack"],
 html[lang="en"] .hero-icon[data-id="instagram"],
 html[lang="en"] .hero-icon[data-id="youtube"] {
-  margin-left: -80px !important;
+  margin-left: 60px !important;
+}
+html[lang="en"] .hero-icon[data-id="telegram"] {
+  margin-top: -50px !important;
+}
+html[lang="en"] .hero-icon[data-id="youtube"] {
+  margin-left: -40px !important;
 }
 html[lang="en"] .hero-icon[data-id="discord"],
 html[lang="en"] .hero-icon[data-id="messenger"],
@@ -1772,7 +1791,7 @@ html[lang="en"] .hero-icon[data-id="spotify"],
 html[lang="en"] .hero-icon[data-id="dribbble"],
 html[lang="en"] .hero-icon[data-id="linkedin"],
 html[lang="en"] .hero-icon[data-id="skype"] {
-  margin-left: 80px !important;
+  margin-left: 60px !important;
 }
 
 /* --- 英文：顶部 Tab 间距调整 --- */
