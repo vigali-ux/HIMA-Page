@@ -1402,23 +1402,88 @@ html[lang="en"] .s2-3dicon {
    ========================================================= */
 .games-wall { position: absolute; }
 .games-wall-img {
-  display: block;
-  border-radius: 18px;
+  display: none; /* deprecated — replaced by games-grid */
+}
+
+/* === 合作游戏 3 列瀑布流 === */
+.games-grid {
+  position: relative;
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+.games-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+.games-grid .game-card {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
   cursor: pointer;
+  line-height: 0;
   /* 入场前 */
   opacity: 0;
-  transform: translateY(50px);
+  transform: translateY(30px);
   transition:
     opacity .8s cubic-bezier(.22,.61,.36,1),
     transform .8s cubic-bezier(.22,.61,.36,1);
 }
-#scene5.is-in .games-wall-img {
+.games-grid .game-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 0;
+  transition: transform .5s cubic-bezier(.22,.61,.36,1);
+}
+/* hover: 仅图片微放大，容器 overflow:hidden 裁切 */
+.games-grid .game-card:hover img {
+  transform: scale(1.06);
+}
+/* 底部渐变蒙版 + 游戏名 — 覆盖在图片上，hover 显示 */
+.games-grid .game-card .game-card-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.65) 100%);
+  display: flex;
+  align-items: flex-end;
+  padding: 0 16px 14px;
+  opacity: 0;
+  transition: opacity .4s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+.games-grid .game-card:hover .game-card-overlay {
+  opacity: 1;
+}
+.game-card-overlay span {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: .3px;
+  line-height: 1.2;
+}
+/* 滚动入场：交错延迟 */
+#scene5.is-in .games-grid .game-card {
   opacity: 1;
   transform: translateY(0);
 }
-#scene5.is-in .games-wall-img:hover {
-  transform: translateY(-6px) scale(1.008);
-}
+/* 交错入场延迟：按行从左到右、从上到下 */
+.games-grid .game-card[data-game="1"] { transition-delay: 0s; }
+.games-grid .game-card[data-game="2"] { transition-delay: .1s; }
+.games-grid .game-card[data-game="3"] { transition-delay: .2s; }
+.games-grid .game-card[data-game="4"] { transition-delay: .35s; }
+.games-grid .game-card[data-game="5"] { transition-delay: .45s; }
+.games-grid .game-card[data-game="6"] { transition-delay: .55s; }
+.games-grid .game-card[data-game="7"] { transition-delay: .7s; }
+.games-grid .game-card[data-game="8"] { transition-delay: .8s; }
+.games-grid .game-card[data-game="9"] { transition-delay: .9s; }
 .game-card:not(.games-grid .game-card) {
   position: absolute;
   border-radius: 18px;
@@ -1443,14 +1508,14 @@ html[lang="en"] .s2-3dicon {
   box-shadow: none;
   z-index: 3;
 }
-.game-card img {
+.game-card:not(.games-grid .game-card) img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
   transition: transform .6s cubic-bezier(.22,.61,.36,1);
 }
-.game-card:hover img { transform: scale(1.08); }
+.game-card:not(.games-grid .game-card):hover img { transform: scale(1.08); }
 .game-tint {
   position: absolute;
   inset: 0;
