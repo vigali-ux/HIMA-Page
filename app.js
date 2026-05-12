@@ -72,44 +72,90 @@ if (window.gsap) {
   });
 }
 
-// ========= 2.1 Hero 首屏整体跟随鼠标位移 =========
+// ========= 2.1 Hero 首屏视差跟随鼠标位移 =========
 const heroCanvas = document.querySelector('.hero-canvas');
-const heroFollowLayer = document.querySelector('.hero-follow-layer');
-if (heroCanvas && heroFollowLayer) {
-  const maxMoveX = 26;
-  const maxMoveY = 18;
+const heroTitleEls = document.querySelectorAll('.hero-title');
+const heroSubtitleEl = document.querySelector('.hero-subtitle');
+if (heroCanvas) {
+  const layers = {
+    icon: { x: 34, y: 24 },
+    role: { x: 24, y: 17 },
+    title: { x: 10, y: 6 },
+    subtitle: { x: 10, y: 6 },
+  };
   let rafId = 0;
   let targetX = 0;
   let targetY = 0;
+  let currentX = 0;
+  let currentY = 0;
 
-  const applyHeroFollow = () => {
-    heroFollowLayer.style.setProperty('--hero-follow-x', `${targetX.toFixed(2)}px`);
-    heroFollowLayer.style.setProperty('--hero-follow-y', `${targetY.toFixed(2)}px`);
-    rafId = 0;
+  const setLayerVar = (name, x, y) => {
+    heroCanvas.style.setProperty(`--hero-${name}-x`, `${x.toFixed(2)}px`);
+    heroCanvas.style.setProperty(`--hero-${name}-y`, `${y.toFixed(2)}px`);
   };
 
-  const updateHeroFollow = (ev) => {
+  const applyHeroParallax = () => {
+    currentX += (targetX - currentX) * 0.08;
+    currentY += (targetY - currentY) * 0.08;
+
+    Object.entries(layers).forEach(([name, factor]) => {
+      setLayerVar(name, currentX * factor.x, currentY * factor.y);
+    });
+
+    const titleX = currentX * layers.title.x;
+    const titleY = currentY * layers.title.y;
+    const subtitleX = currentX * layers.subtitle.x;
+    const subtitleY = currentY * layers.subtitle.y;
+    heroTitleEls.forEach((el) => {
+      el.style.transform = `translate3d(${titleX.toFixed(2)}px, ${titleY.toFixed(2)}px, 0)`;
+    });
+    if (heroSubtitleEl) {
+      heroSubtitleEl.style.transform = `translate3d(${subtitleX.toFixed(2)}px, ${subtitleY.toFixed(2)}px, 0)`;
+    }
+
+    if (Math.abs(targetX - currentX) > 0.001 || Math.abs(targetY - currentY) > 0.001) {
+      rafId = requestAnimationFrame(applyHeroParallax);
+    } else {
+      rafId = 0;
+    }
+  };
+
+  const startHeroParallax = () => {
+    if (!rafId) rafId = requestAnimationFrame(applyHeroParallax);
+  };
+
+  const updateHeroParallax = (ev) => {
     const rect = heroCanvas.getBoundingClientRect();
-    const relX = (ev.clientX - rect.left) / rect.width - 0.5;
-    const relY = (ev.clientY - rect.top) / rect.height - 0.5;
-    targetX = relX * 2 * maxMoveX;
-    targetY = relY * 2 * maxMoveY;
+    targetX = ((ev.clientX - rect.left) / rect.width - 0.5) * 2;
+    targetY = ((ev.clientY - rect.top) / rect.height - 0.5) * 2;
     heroCanvas.classList.add('hero-following');
-    if (!rafId) rafId = requestAnimationFrame(applyHeroFollow);
+    startHeroParallax();
   };
 
-  const resetHeroFollow = () => {
+  const resetHeroParallax = () => {
     targetX = 0;
     targetY = 0;
     heroCanvas.classList.remove('hero-following');
-    if (!rafId) rafId = requestAnimationFrame(applyHeroFollow);
+    startHeroParallax();
   };
 
-  heroCanvas.addEventListener('pointermove', updateHeroFollow);
-  heroCanvas.addEventListener('pointerleave', resetHeroFollow);
+  heroCanvas.addEventListener('pointermove', updateHeroParallax);
+  heroCanvas.addEventListener('pointerleave', resetHeroParallax);
 }
 
-// ========= 3. 滚动渐入上移 · section & 卡片交错 =========
+// ========= 2.2 顶部导航滚动固定态 =========
+const heroNav = document.querySelector('.hero-nav');
+const heroSection = document.querySelector('#hero');
+if (heroNav && heroSection) {
+  const updateNavTheme = () => {
+    heroNav.classList.toggle('is-scrolled', window.scrollY > 0);
+  };
+  updateNavTheme();
+  window.addEventListener('scroll', updateNavTheme, { passive: true });
+  window.addEventListener('resize', updateNavTheme);
+}
+
+// ========= 3. 滚动渐入上移 · section & 卡片交错 ========= 
 // 3.1 给需要交错的卡片加 .stagger-item 并设置自定义延迟
 const attachStagger = () => {
   const groups = [
@@ -242,11 +288,9 @@ const initTabSwitcher = () => {
     // 移动指示条到目标 tab 下方
     // 使用 offsetLeft + offsetWidth（不受 transform scale 影响）代替 getBoundingClientRect
     const moveIndicator = (tab) => {
-      const tabLeft = tab.offsetLeft;
-      const tabWidth = tab.offsetWidth;
-      // indicator 宽度跟随 tab 文字宽度
-      const indicatorWidth = tabWidth;
-      const left = tabLeft;
+      const label = tab.querySelector('span') || tab;
+      const indicatorWidth = label.offsetWidth;
+      const left = tab.offsetLeft + label.offsetLeft;
       indicator.style.left = left + 'px';
       indicator.style.width = indicatorWidth + 'px';
     };
@@ -468,95 +512,129 @@ const i18n = {
     'footer-company': '粤网文[2017]6138-1456号 新出网证（粤）字010号 网络视听许可证1904073号 增值电信业务经营许可证: 粤B2-20090059 B2-20090028<br/>新闻信息服务许可证 粤府新函[2001]87号 违法和不良信息举报电话：0755-83765566-9 粤公网安备44030002000001号<br/>互联网药品信息服务资格证书 （粤）一非营业性一2017-0153',
   },
   en: {
-    'page-title': 'HIMA · Your All-in-One Overseas Game Operations Platform',
-    'nav-sm': 'Social Media', 'nav-sq': 'Community', 'nav-zb': 'Live Streaming', 'nav-sx': 'Direct Messaging',
-    'nav-cta': 'Contact Us',
-    'hero-t1a': 'Your ', 'hero-t1b': 'All-in-One', 'hero-t2': 'Overseas Game', 'hero-t3': 'Operations Platform',
-    'hero-sub': 'Empowering overseas game operations with comprehensive tech support and global marketing ecosystem integration',
-    'stat-t1': 'Core Scenarios', 'stat-d1': 'Social Media, Community, Live Streaming, DM Covering full-lifecycle core operation scenarios',
-    'stat-t2': 'Overseas Channels', 'stat-d2': 'One-stop access to Discord, Twitch and other major global social platforms',
-    'stat-t3': 'Game Projects', 'stat-d3': 'Proven track record with PUBG Mobile, Delta Force and other hit titles',
-    'stat-t4': 'Languages', 'stat-d4': 'CN, EN, JP, KR, DE and more Multi-language localized operations & delivery',
-    's1-title': 'Social Media Management', 's1-sub': 'Covering all major global social media platforms with integrated posting, engagement and analytics solutions',
-    's1-more': 'More platforms coming',
-    's1-tab1': 'Post Editor', 's1-tab2': 'Scheduling', 's1-tab3': 'Review Workflow', 's1-tab4': 'Dashboard', 's1-tab5': 'More Features',
-    's1-bluet': 'Rich Text Editor<br/>One-Click Multi-Post',
-    's1-b1': 'Supports image, video, Reel and more formats', 's1-b2': 'AI translation + one-click multi-language adaptation',
-    's1-b3': 'Scheduled / targeted posting across global time zones', 's1-b4': 'Real-time preview across all platforms',
-    's1-btn1': '🏷 Tags', 's1-btn2': '📅 Schedule', 's1-btn3': '⚠ Publish Now', 's1-btn4': '⏩ Add to Queue',
-    's1-t1-title': 'Rich Text Editor<br/>One-Click Multi-Post',
-    's1-t1-b1': 'Supports image, video, Reel and more formats',
-    's1-t1-b2': 'AI translation + one-click multi-language adaptation',
-    's1-t1-b3': 'Scheduled / targeted posting across global time zones',
-    's1-t1-b4': 'Real-time preview across all platforms',
-    's1-t2-title': 'Calendar-<br/>Based Visual<br/>Scheduling',
-    's1-t2-desc': 'Quickly create and align social media strategies — all platform schedules unified in a single calendar view.',
-    's1-t2-b1': 'Unified calendar view for multi-platform schedules',
-    's1-t2-b2': 'Quickly create tasks and align team cadence',
-    's1-t2-b3': 'Keyword search + multi-dimensional filtering',
-    's1-t3-title': 'Custom<br/>Multi-Level Approval',
-    's1-t3-desc': 'Custom multi-level approval workflows with full audit trails, WeCom real-time notifications, and content compliance assurance.',
-    's1-t3-b1': 'Custom approval tiers flexibly adapting to team processes',
-    's1-t3-b2': 'Full operation history archived with clear accountability',
-    's1-t3-b3': 'WeCom real-time notifications for approval progress',
-    's1-t4-title': 'Multi-Dimensional<br/>Data Analytics',
-    's1-t4-desc': 'Unified tracking across all official accounts, multi-dimensional content analysis, and AI audience profiling for precision operations.',
-    's1-t4-b1': 'Impressions, engagement, follower growth visualization',
-    's1-t4-b2': 'Flexible period comparison: 7 / 30 / 90 days',
-    's1-t4-b3': 'AI audience profiling for precise user insights',
-    's1-t5-title': 'More Capabilities<br/>Coming Soon',
-    's1-t5-b1': 'Unified social inbox: reply to comments & DMs across all platforms in one place',
-    's1-t5-b2': 'Content risk pre-review: proactive detection of cultural taboos & sensitive risks',
-    's2-title': 'Community Operations', 's2-sub': 'The most powerful Discord community operations solution, empowering fully-controlled official community management',
-    's2-desc': 'One-click game account binding within Discord servers — upon successful binding, rewards are automatically issued, deeply connecting gaming and community ecosystems',
-    's2-desc1': 'One-click game account binding within Discord servers — upon successful binding, rewards are automatically issued, deeply connecting gaming and community ecosystems',
-    's2-desc2': 'Players can directly query game data within Discord, share achievements, and drive social virality',
-    's2-desc3': 'Check-in, lottery, leaderboard, CDK redemption — low-cost configuration with quick re-launch support',
-    's2-desc4': 'Member growth incentives, AI smart customer service, team-up Bot, add game friends and more full-scenario capabilities',
-    's2-tab1': 'Game Account Binding', 's2-tab2': 'In-App Data Query', 's2-tab3': 'Custom Marketing Campaigns', 's2-tab4': 'More Features',
-    's3-title': 'Live Streaming', 's3-sub': 'Rich marketing capabilities across major overseas streaming platforms — drops, widgets, streamer challenges, AI highlights',
-    's3-more': 'More platforms coming',
-    's3-tab1': 'Live Drops', 's3-tab2': 'Widgets', 's3-tab3': 'Streamer Challenge', 's3-tab4': 'AI Highlights', 's3-tab5': 'More Features',
-    's3-t1-title': 'Drops<br/>Campaign Setup',
-    's3-t1-desc': 'Manage Drops campaigns across Twitch, CHZZK, Mirrativ, Tiktok and more from a single dashboard.',
-    's3-t1-b1': 'Unified multi-platform Drops configuration',
-    's3-t1-b2': 'Flexible watch-time conditions & reward settings',
-    's3-t1-b3': 'Account linking verification, precise reward delivery',
-    's3-t2-title': 'Live Stream<br/>Interactive Marketing',
-    's3-t2-desc': 'Add interactive web pages to live streams via Twitch Extension, enabling diverse marketing tactics for acquisition, engagement, and monetization.',
-    's3-t2-b1': 'Low-barrier widget setup, quick to launch',
-    's3-t2-b2': 'Covers acquisition, engagement, and revenue goals',
-    's3-t2-b3': 'Real-time in-stream participation, seamless experience',
-    's3-t3-title': 'Player & Streamer<br/>Interactive Challenge',
-    's3-t3-desc': 'Built on Twitch Extension and more, enabling Streamer Challenge and interactive quests between players and streamers.',
-    's3-t3-b1': 'Streamer-player synergy for deeper live engagement',
-    's3-t3-b2': 'Dual-track Player / Streamer Challenge system',
-    's3-t3-b3': 'Quest reward mechanism driving sustained participation',
-    's3-t4-title': 'AI Live<br/>Highlight Detection',
-    's3-t4-desc': 'Automatically identify highlight moments, generate clips and content summaries with one click. Barrage analysis + data reports auto-generated.',
-    's3-t4-point1': 'No SDK integration required; supports multi-language streamer scenarios',
-    's3-t4-point2': 'Supports barrage sentiment analysis',
-    's3-t4-point3': 'Supports streamer dialogue translation',
-    's3-t4-b1': '',
-    's3-t4-b2': '',
-    's3-t4-b3': '',
-    's3-t5-title': 'More Features<br/>Coming Soon',
-    's3-t5-desc': 'Continuously integrating more live streaming tools and capabilities.',
-    's3-t5-b1': 'More streaming platforms being integrated',
-    's3-t5-b2': 'Data reports and post-stream analysis',
-    's3-t5-b3': 'Automated operational workflow orchestration',
-    's4-title': 'Direct Messaging', 's4-sub': 'Precision reach across all overseas user touchpoints — acquisition, re-engagement, activation and revenue growth',
-    's4-tag1': 'Scheduled Push', 's4-fd1': 'Multi-timezone scheduled push for precise coverage of peak user activity',
-    's4-tag2': 'Targeted Push', 's4-fd2': 'Audience-specific targeted push for refined user segment reach',
-    's4-tag3': 'Event-Triggered Push', 's4-fd3': 'Real-time player status monitoring with automatic content push based on behavior triggers',
-    's4-tag4': 'NDA Test Push', 's4-fd4': 'Seamlessly integrated with NDA signing & CDK systems for unified test qualification management',
-    's5-title': 'Partner Games', 's5-sub': 'Deep integration with the gaming ecosystem — seamless platform-game connectivity with an ever-expanding partnership portfolio',
-    'footer-slogan': 'One-stop overseas game<br/>operation platform',
-    'footer-links1': '<a>About Tencent</a><span class="sep">|</span><a>About Tencent</a><span class="sep">|</span><a>Terms of Service</a><span class="sep">|</span><a>Privacy Policy</a><span class="sep">|</span><a>Open Platform</a><span class="sep">|</span><a>Advertising</a><span class="sep">|</span><a>Tencent Careers</a><span class="sep">|</span><a>Tencent Charity</a><span class="sep">|</span><a>Tencent Cloud</a><span class="sep">|</span><a>Support Center</a><span class="sep">|</span><a>Report Center</a><span class="sep">|</span><a>Site Map</a>',
-    'footer-links2': '<a>Shenzhen Report Center</a><span class="sep">|</span><a>Shenzhen Public Security</a><span class="sep">|</span><a>Ad Compliance Commitment</a><span class="sep">|</span><a>Copyright Protection Guide</a><span class="sep">|</span><a>Guangdong Communications Admin</a>',
-    'footer-company': 'Yue Wang Wen [2017] 6138-1456 / New Net Certificate (Yue) Zi 010 / Network AV License 1904073 / Telecom Business License: Yue B2-20090059 B2-20090028<br/>News Information Service License Yue Fu Xin Han [2001] 87 / Illegal Info Hotline: 0755-83765566-9 / Yue Gong Wang An Bei 44030002000001<br/>Internet Pharmaceutical Info Service Certificate (Yue) Non-commercial 2017-0153',
-  }
-};
+    "page-title": "HIMA · Your All-in-One Global Game Operations Platform",
+    "nav-sm": "Social Media",
+    "nav-sq": "Community",
+    "nav-zb": "Live Stream",
+    "nav-sx": "Direct Message",
+    "nav-cta": "Contact Us",
+    "hero-t1a": "Your ",
+    "hero-t1b": "All-in-One",
+    "hero-t2": "Global Game",
+    "hero-t3": "Operations Platform",
+    "hero-sub": "Streamline Social Media, Community, Live Stream, and Direct Message. Empowering precise global operations with comprehensive technical support and an integrated marketing ecosystem.",
+    "stat-t1": "Core Scenarios",
+    "stat-d1": "Social, Community, Live, DM",
+    "stat-t2": "Mainstream Global Channels",
+    "stat-d2": "Discord, Twitch, etc.",
+    "stat-t3": "Partnered Game Projects",
+    "stat-d3": "PUBGM, Delta Force, etc.",
+    "stat-t4": "Languages Supported",
+    "stat-d4": "Chinese, English, Japanese, etc.",
+    "s1-title": "Global Social Media Management",
+    "s1-sub": "Covering world-leading social platforms with an all-in-one solution for publishing, engagement, and data analytics.",
+    "s1-more": "More Channels",
+    "s1-tab1": "Publishing & Editor",
+    "s1-tab2": "Strategic Calendar",
+    "s1-tab3": "Approval Workflow",
+    "s1-tab4": "Data Dashboard",
+    "s1-tab5": "Additional Capabilities",
+    "s1-bluet": "Rich Text<br/>Editing",
+    "s1-b1": "Support multiple formats including images, videos, and Reels",
+    "s1-b2": "Adapt content for global audiences with one-click AI translation",
+    "s1-b3": "Target global audiences with scheduled publishing across multiple timezones",
+    "s1-b4": "Preview post appearances across all platforms in real time",
+    "s1-btn1": "🏷 Tags",
+    "s1-btn2": "📅 Schedule",
+    "s1-btn3": "⚠ Publish Now",
+    "s1-btn4": "⏩ Add to Queue",
+    "s1-t1-title": "Rich Text<br/>Editing",
+    "s1-t1-b1": "Support multiple formats including images, videos, and Reels",
+    "s1-t1-b2": "Adapt content for global audiences with one-click AI translation",
+    "s1-t1-b3": "Target global audiences with scheduled publishing across multiple timezones",
+    "s1-t1-b4": "Preview post appearances across all platforms in real time",
+    "s1-t2-title": "Visualized Calendar<br/>Scheduling",
+    "s1-t2-desc": "Visualize your strategy with an interactive calendar. Create and align social media plans effortlessly, ensuring your team’s publishing schedule is clear at a glance.",
+    "s1-t2-b1": "Unified multi-platform view of all publishing schedules",
+    "s1-t2-b2": "Create tasks rapidly to sync your team’s operational rhythm",
+    "s1-t2-b3": "Locate content instantly with keyword search and multi-dimensional filters",
+    "s1-t3-title": "Customizable<br/>Multi-Level Approvals",
+    "s1-t3-desc": "Empower your team with customizable multi-level approvals, full audit trails, and real-time WeCom notifications for guaranteed compliance.",
+    "s1-t3-b1": "Customize approval tiers to flexibly adapt to your team’s workflow",
+    "s1-t3-b2": "Archive all operational logs to ensure clear accountability and transparency",
+    "s1-t3-b3": "Stay updated on approval status via real-time WeCom notifications",
+    "s1-t4-title": "Multi-Dimensional<br/>Data Analytics",
+    "s1-t4-desc": "Track official accounts across all platforms with multi-dimensional analysis and AI-powered follower profiling for data-driven decisions.",
+    "s1-t4-b1": "Visualize impressions, engagement rates, and follower growth trends",
+    "s1-t4-b2": "Compare performance across flexible 7-day, 30-day, and 90-day cycles",
+    "s1-t4-b3": "Gain precise audience insights through AI-powered follower profiling",
+    "s1-t5-title": "Full-Spectrum<br/>Operational Capabilities",
+    "s1-t5-b1": "Unified Social Media Inbox: Centralized Response Management for Multi-Platform Social Interactions",
+    "s1-t5-b2": "Content Risk Pre-screening: Proactive insights into cultural taboos and sensitivity risks",
+    "s2-title": "Discord Community Operations",
+    "s2-sub": "The premier full-scenario Discord solution for official private domains, empowering businesses to build versatile, high-control, and resilient official communities.",
+    "s2-desc": "Link game accounts within Discord to trigger instant rewards and deeply integrate game-to-community ecosystems",
+    "s2-desc1": "Link game accounts within Discord to trigger instant rewards and deeply integrate game-to-community ecosystems",
+    "s2-desc2": "Query game statistics and share battle records directly within Discord to drive social growth and virality",
+    "s2-desc3": "Deploy check-ins, giveaways, and leaderboards with low-cost setup and rapid replication support",
+    "s2-desc4": "Explore full-scenario capabilities including member leveling, AI support, LFG bots, and in-game friend requests",
+    "s2-tab1": "In-Game Account Linking",
+    "s2-tab2": "In-App Game Data Query",
+    "s2-tab3": "Customized Campaigns",
+    "s2-tab4": "Additional Capabilities",
+    "s3-title": "Global Livestreaming Operations",
+    "s3-sub": "Empower global streaming with diverse marketing tools including Drops, interactive widgets, creator challenges, and AI highlight extraction",
+    "s3-more": "More platforms coming",
+    "s3-tab1": "Livestreaming Drops",
+    "s3-tab2": "Interactive Overlays",
+    "s3-tab3": "Streamer Challenges",
+    "s3-tab4": "AI Stream Highlight Extraction",
+    "s3-tab5": "Additional Capabilities",
+    "s3-t1-title": "Drops Campaign<br/>Configuration",
+    "s3-t1-desc": "Manage Drops campaigns across Twitch, CHZZK, Mirrativ, and TikTok with unified configuration and centralized control.",
+    "s3-t1-b1": "Unified configuration and management of Drops campaigns across multiple platforms",
+    "s3-t1-b2": "Flexible settings for eligibility criteria, watch-time thresholds, and reward pools",
+    "s3-t1-b3": "Verify account linking to ensure precise and automated reward distribution",
+    "s3-t2-title": "Interactive Stream<br/>Marketing",
+    "s3-t2-desc": "Integrate interactive layers via Twitch Extensions to drive user acquisition, engagement, and monetization through immersive stream experiences.",
+    "s3-t2-b1": "Configure interactive overlays with low-code tools for rapid deployment",
+    "s3-t2-b2": "Drive diverse marketing goals across acquisition, engagement, and revenue growth",
+    "s3-t2-b3": "Enable seamless real-time participation for players directly within the stream",
+    "s3-t3-title": "Player-Streamer<br/>Interactive Challenges",
+    "s3-t3-desc": "Develop interactive \"Streamer Challenges\" via Twitch Extensions to foster direct engagement between players and creators.",
+    "s3-t3-b1": "Enhance interaction depth by bridging streamers and their audience through collaborative tasks",
+    "s3-t3-b2": "Implement dual-track challenge systems to maximize participation for both players and streamers",
+    "s3-t3-b3": "Drive consistent engagement through a robust and incentivized task-and-reward system",
+    "s3-t4-title": "Automated Stream<br/>Highlight Detection",
+    "s3-t4-desc": "AI-powered stream highlight extraction for efficient content production and analysis.",
+    "s3-t4-point1": "No SDK Integration Required",
+    "s3-t4-point2": "Live Chat Sentiment Analysis",
+    "s3-t4-point3": "Automated Creator Dialogue Translation",
+    "s3-t4-b1": "",
+    "s3-t4-b2": "",
+    "s3-t4-b3": "",
+    "s3-t5-title": "Full-Lifecycle Stream<br/>Operations Support",
+    "s3-t5-desc": "Streamline livestream operations from strategic scheduling to AI-powered highlight production for maximum efficiency and intelligence.",
+    "s3-t5-b1": "Livestream Strategy Scheduling",
+    "s3-t5-b2": "Livestream Analytics",
+    "s3-t5-b3": "Automated operational workflow orchestration",
+    "s4-title": "Global DM Marketing",
+    "s4-sub": "Reach global users across all channels to drive acquisition, re-engagement, retention, and revenue growth",
+    "s4-tag1": "Scheduled Push",
+    "s4-fd1": "Deliver messages across global timezones to reach target users during their peak active hours",
+    "s4-tag2": "Targeted Push",
+    "s4-fd2": "Deploy targeted campaigns to specific user lists for granular outreach to defined segments",
+    "s4-tag3": "Event-Triggered Push",
+    "s4-fd3": "Monitor player status in real time to automate content delivery based on specific behavioral triggers",
+    "s4-tag4": "CBT & NDA Invitation Push",
+    "s4-fd4": "Integrate NDA signing and CDK systems for seamless all-in-one management of beta test access",
+    "s5-title": "Partnered Game Projects",
+    "s5-sub": "Deep integration with the gaming ecosystem enables seamless platform-game connectivity and a continuously expanding partnership portfolio.",
+    "footer-slogan": "All-in-One Global Game<br/>Ops Platform",
+    "footer-links1": "<a>About Tencent</a><span class=\"sep\">|</span><a>Terms of Service</a><span class=\"sep\">|</span><a>Privacy Policy</a><span class=\"sep\">|</span><a>Open Platform</a><span class=\"sep\">|</span><a>Advertising</a><span class=\"sep\">|</span><a>Tencent Careers</a><span class=\"sep\">|</span><a>Tencent Charity</a><span class=\"sep\">|</span><a>Tencent Cloud</a><span class=\"sep\">|</span><a>Support Center</a><span class=\"sep\">|</span><a>Report Center</a><span class=\"sep\">|</span><a>Site Map</a>",
+    "footer-links2": "<a>Shenzhen Report Center</a><span class=\"sep\">|</span><a>Shenzhen Public Security</a><span class=\"sep\">|</span><a>Ad Compliance Commitment</a><span class=\"sep\">|</span><a>Copyright Protection Guide</a><span class=\"sep\">|</span><a>Guangdong Communications Admin</a>",
+    "footer-company": "Yue Wang Wen [2017] 6138-1456 / New Net Certificate (Yue) Zi 010 / Network AV License 1904073 / Telecom Business License: Yue B2-20090059 B2-20090028<br/>News Information Service License Yue Fu Xin Han [2001] 87 / Illegal Info Hotline: 0755-83765566-9 / Yue Gong Wang An Bei 44030002000001<br/>Internet Pharmaceutical Info Service Certificate (Yue) Non-commercial 2017-0153",
+  }};
 
 let currentLang = 'zh';
 
@@ -636,44 +714,3 @@ if (langToggle) {
   });
 }
 
-/* ===== Footer 鼠标追光 ===== */
-(function() {
-  const footer = document.querySelector('.site-footer');
-  const cursor = document.querySelector('.footer-glow-cursor');
-  if (!footer || !cursor) return;
-
-  let rafId = null;
-  let targetX = 0, targetY = 0;
-  let currentX = 0, currentY = 0;
-
-  footer.addEventListener('mouseenter', () => {
-    cursor.style.opacity = '1';
-  });
-
-  footer.addEventListener('mouseleave', () => {
-    cursor.style.opacity = '0';
-  });
-
-  footer.addEventListener('mousemove', (e) => {
-    const rect = footer.getBoundingClientRect();
-    targetX = e.clientX - rect.left;
-    targetY = e.clientY - rect.top;
-
-    if (!rafId) {
-      rafId = requestAnimationFrame(updateCursor);
-    }
-  });
-
-  function updateCursor() {
-    currentX += (targetX - currentX) * 0.12;
-    currentY += (targetY - currentY) * 0.12;
-    cursor.style.left = currentX + 'px';
-    cursor.style.top = currentY + 'px';
-
-    if (Math.abs(targetX - currentX) > 0.5 || Math.abs(targetY - currentY) > 0.5) {
-      rafId = requestAnimationFrame(updateCursor);
-    } else {
-      rafId = null;
-    }
-  }
-})();
