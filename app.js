@@ -507,8 +507,6 @@ const i18n = {
     's4-tag4': '保密测试协议推送', 's4-fd4': '特别打通保密协议签署系统 & CDK 系统，一体化管理测试资格发放',
     's5-title': '合作游戏', 's5-sub': '深度接入游戏生态，实现平台与游戏的无缝联动，持续扩展合作版图，更多游戏陆续接入中',
     'footer-slogan': '一站式海外游戏运营平台',
-    'footer-links1': '<a>关于腾讯</a><span class="sep">|</span><a>About Tencent</a><span class="sep">|</span><a>服务协议</a><span class="sep">|</span><a>隐私政策</a><span class="sep">|</span><a>开放平台</a><span class="sep">|</span><a>广告服务</a><span class="sep">|</span><a>腾讯招聘</a><span class="sep">|</span><a>腾讯公益</a><span class="sep">|</span><a>腾讯云</a><span class="sep">|</span><a>客服中心</a><span class="sep">|</span><a>举报中心</a><span class="sep">|</span><a>网址导航</a>',
-    'footer-links2': '<a>深圳举报中心</a><span class="sep">|</span><a>深圳公安局</a><span class="sep">|</span><a>抵制违法广告承诺书</a><span class="sep">|</span><a>版权保护投诉指引</a><span class="sep">|</span><a>广东省通管局</a>',
     'footer-company': '粤网文[2017]6138-1456号 新出网证（粤）字010号 网络视听许可证1904073号 增值电信业务经营许可证: 粤B2-20090059 B2-20090028<br/>新闻信息服务许可证 粤府新函[2001]87号 违法和不良信息举报电话：0755-83765566-9 粤公网安备44030002000001号<br/>互联网药品信息服务资格证书 （粤）一非营业性一2017-0153',
   },
   en: {
@@ -631,8 +629,6 @@ const i18n = {
     "s5-title": "Partnered Game Projects",
     "s5-sub": "Deep integration with the gaming ecosystem enables seamless platform-game connectivity and a continuously expanding partnership portfolio.",
     "footer-slogan": "All-in-One Global Game<br/>Ops Platform",
-    "footer-links1": "<a>About Tencent</a><span class=\"sep\">|</span><a>Terms of Service</a><span class=\"sep\">|</span><a>Privacy Policy</a><span class=\"sep\">|</span><a>Open Platform</a><span class=\"sep\">|</span><a>Advertising</a><span class=\"sep\">|</span><a>Tencent Careers</a><span class=\"sep\">|</span><a>Tencent Charity</a><span class=\"sep\">|</span><a>Tencent Cloud</a><span class=\"sep\">|</span><a>Support Center</a><span class=\"sep\">|</span><a>Report Center</a><span class=\"sep\">|</span><a>Site Map</a>",
-    "footer-links2": "<a>Shenzhen Report Center</a><span class=\"sep\">|</span><a>Shenzhen Public Security</a><span class=\"sep\">|</span><a>Ad Compliance Commitment</a><span class=\"sep\">|</span><a>Copyright Protection Guide</a><span class=\"sep\">|</span><a>Guangdong Communications Admin</a>",
     "footer-company": "Yue Wang Wen [2017] 6138-1456 / New Net Certificate (Yue) Zi 010 / Network AV License 1904073 / Telecom Business License: Yue B2-20090059 B2-20090028<br/>News Information Service License Yue Fu Xin Han [2001] 87 / Illegal Info Hotline: 0755-83765566-9 / Yue Gong Wang An Bei 44030002000001<br/>Internet Pharmaceutical Info Service Certificate (Yue) Non-commercial 2017-0153",
   }};
 
