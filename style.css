@@ -140,16 +140,24 @@ a { color: inherit; text-decoration: none; }
    顶部导航（嵌入 hero-canvas，Figma 精确坐标）
    ========================================================= */
 .hero-nav {
-  position: absolute;
+  position: fixed;
   left: 0; top: 0;
   width: 100%;
   height: 80px;
-  z-index: 20;
+  z-index: 9998;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 60px;
   box-sizing: border-box;
+  background: transparent;
+  transition: background .32s ease, box-shadow .32s ease, backdrop-filter .32s ease;
+}
+.hero-nav.is-scrolled {
+  background: rgba(20, 22, 28, .94);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .18);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 /* 品牌 LOGO（左） */
@@ -164,6 +172,10 @@ a { color: inherit; text-decoration: none; }
   width: 39px; height: 38px;
   object-fit: contain;
   filter: brightness(0);
+  transition: filter .32s ease;
+}
+.hero-nav.is-scrolled .nav-brand-mark {
+  filter: brightness(0) invert(1);
 }
 .nav-brand-name {
   font-family: 'Radikal', 'Space Grotesk', sans-serif;
@@ -173,6 +185,10 @@ a { color: inherit; text-decoration: none; }
   color: #11131b;
   position: relative;
   top: 2px;
+  transition: color .32s ease;
+}
+.hero-nav.is-scrolled .nav-brand-name {
+  color: #fff;
 }
 
 /* 菜单（Figma x=682, w=496, h=24） */
@@ -197,6 +213,9 @@ html[lang="zh-CN"] .nav-menu {
   transition: color .25s ease;
   white-space: nowrap;
 }
+.hero-nav.is-scrolled .nav-menu .nav-link {
+  color: rgba(255,255,255,.88);
+}
 .nav-menu .nav-link::after {
   content: '';
   position: absolute;
@@ -207,6 +226,7 @@ html[lang="zh-CN"] .nav-menu {
   transition: width .3s ease;
 }
 .nav-menu .nav-link:hover { color: #0165F2; }
+.hero-nav.is-scrolled .nav-menu .nav-link:hover { color: #fff; }
 .nav-menu .nav-link:hover::after { width: 100%; }
 
 /* 右侧容器 */
@@ -225,7 +245,10 @@ html[lang="zh-CN"] .nav-menu {
   font-weight: 500;
   color: #11131b;
   cursor: pointer;
-  transition: color .2s ease;
+  transition: color .32s ease;
+}
+.hero-nav.is-scrolled .nav-lang {
+  color: rgba(255,255,255,.88);
 }
 .nav-lang svg {
   flex-shrink: 0;
@@ -234,7 +257,10 @@ html[lang="zh-CN"] .nav-menu {
 .nav-lang span {
   line-height: 1;
 }
-.nav-lang:hover { color: #0165F2; }
+.nav-lang:hover,
+.hero-nav.is-scrolled .nav-lang:hover {
+  color: #0165F2;
+}
 
 /* 合作咨询按钮（蓝底白字） */
 .nav-cta {
@@ -276,8 +302,8 @@ html[lang="zh-CN"] .nav-menu {
     drop-shadow(0 0 26px rgba(255,255,255,.75));
 }
 @keyframes kvFloat {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-14px); }
+  0%, 100% { transform: translate3d(var(--hero-role-x, 0px), var(--hero-role-y, 0px), 0); }
+  50%      { transform: translate3d(var(--hero-role-x, 0px), calc(var(--hero-role-y, 0px) - 14px), 0); }
 }
 
 /* ==========================================================
@@ -298,8 +324,8 @@ html[lang="zh-CN"] .nav-menu {
 }
 /* 首屏 icons 不设置 hover 放大或发光，保持整体跟随与常态漂浮即可 */
 @keyframes iconFloat {
-  0%, 100% { transform: translateY(0)     rotate(0deg) scale(1); }
-  50%      { transform: translateY(-10px) rotate(1deg) scale(1); }
+  0%, 100% { transform: translate3d(var(--hero-icon-x, 0px), var(--hero-icon-y, 0px), 0) rotate(0deg) scale(1); }
+  50%      { transform: translate3d(var(--hero-icon-x, 0px), calc(var(--hero-icon-y, 0px) - 10px), 0) rotate(1deg) scale(1); }
 }
 .hero-follow-layer {
   position: absolute;
@@ -307,14 +333,17 @@ html[lang="zh-CN"] .nav-menu {
   width: 1920px;
   height: 1030px;
   z-index: 3;
-  transform: translate3d(var(--hero-follow-x, 0px), var(--hero-follow-y, 0px), 0);
-  transition: transform .72s cubic-bezier(.22, 1, .36, 1);
   will-change: transform;
   pointer-events: none;
 }
 .hero-follow-layer .hero-kv,
 .hero-follow-layer .hero-icon {
   pointer-events: auto;
+}
+.hero-title,
+.hero-subtitle {
+  transition: transform .72s cubic-bezier(.22, 1, .36, 1);
+  will-change: transform;
 }
 .hero-canvas.hero-following .hero-title,
 .hero-canvas.hero-following .hero-subtitle {
@@ -934,7 +963,7 @@ html[lang="zh-CN"] .nav-menu {
   z-index: 5;
 }
 html[lang="en"] .s2-3dicon {
-  left: 360px !important;
+  left: 170px !important;
 }
 /* 当父 section 进入视口时，做掉落 + 后续轻微漂浮 */
 #scene2.is-in .s2-3dicon[data-drop="0"] {
@@ -1558,20 +1587,23 @@ html[lang="en"] .s2-3dicon {
   line-height: 1.2;
   letter-spacing: -0.02em;
   font-weight: 400;
-  color: transparent;
-  background: linear-gradient(110deg, #ffffff 0%, #ffffff 32%, #dce9ff 42%, #6fa8ff 50%, #dce9ff 58%, #ffffff 68%, #ffffff 100%);
-  background-size: 320% 100%;
+  color: #fff;
+  background: linear-gradient(110deg, #ffffff 0%, #ffffff 30%, #d9e8ff 42%, #4d94ff 49%, #0165F2 52%, #4d94ff 55%, #d9e8ff 66%, #ffffff 78%, #ffffff 100%);
+  background-size: 260% 100%;
+  background-position: 120% 50%;
   -webkit-background-clip: text;
   background-clip: text;
-  animation: footerSloganShine 9.6s cubic-bezier(.4, 0, .2, 1) infinite;
-  text-shadow: 0 0 28px rgba(1,101,242,.18);
+  text-shadow: 0 0 20px rgba(1,101,242,.12);
   z-index: 2;
 }
+.site-footer.is-in .footer-slogan {
+  color: transparent;
+  text-shadow: 0 0 32px rgba(1,101,242,.26);
+  animation: footerSloganShine 4.2s linear 0s infinite;
+}
 @keyframes footerSloganShine {
-  0% { background-position: 145% 50%; }
-  18% { background-position: 145% 50%; }
-  72% { background-position: -45% 50%; }
-  100% { background-position: -45% 50%; }
+  0% { background-position: 120% 50%; }
+  100% { background-position: -80% 50%; }
 }
 html[lang="en"] .footer-slogan {
   font-family: 'Radikal', 'Space Grotesk', sans-serif;
@@ -1605,80 +1637,7 @@ html[lang="en"] .footer-slogan {
   padding-bottom: 56px;
 }
 
-/* ===== Footer 底部流光动效 ===== */
-.footer-glow-wrap {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 1;
-}
-.footer-glow {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(70px);
-  opacity: 0.3;
-  will-change: transform;
-}
-.footer-glow--1 {
-  top: 55%;
-  left: -5%;
-  width: 300px;
-  height: 120px;
-  background: linear-gradient(90deg, #0165F2, #6366f1);
-  animation: glowFlow1 6s ease-in-out infinite;
-}
-.footer-glow--2 {
-  top: 45%;
-  left: 35%;
-  width: 360px;
-  height: 110px;
-  background: linear-gradient(90deg, #6366f1, #a855f7);
-  animation: glowFlow2 8s ease-in-out infinite;
-}
-.footer-glow--3 {
-  top: 60%;
-  left: 65%;
-  width: 280px;
-  height: 120px;
-  background: linear-gradient(90deg, #a855f7, #0165F2);
-  animation: glowFlow3 7s ease-in-out infinite;
-}
-@keyframes glowFlow1 {
-  0%   { transform: translateX(0) translateY(0); }
-  33%  { transform: translateX(220px) translateY(-25px); }
-  66%  { transform: translateX(110px) translateY(15px); }
-  100% { transform: translateX(0) translateY(0); }
-}
-@keyframes glowFlow2 {
-  0%   { transform: translateX(0) translateY(0); }
-  33%  { transform: translateX(-160px) translateY(20px); }
-  66%  { transform: translateX(80px) translateY(-10px); }
-  100% { transform: translateX(0) translateY(0); }
-}
-@keyframes glowFlow3 {
-  0%   { transform: translateX(0) translateY(0); }
-  33%  { transform: translateX(-200px) translateY(-15px); }
-  66%  { transform: translateX(130px) translateY(25px); }
-  100% { transform: translateX(0) translateY(0); }
-}
-/* 鼠标追光 */
-.footer-glow-cursor {
-  position: absolute;
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(1,101,242,0.25) 0%, rgba(99,102,241,0.1) 40%, transparent 70%);
-  filter: blur(30px);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  transform: translate(-50%, -50%);
-  will-change: left, top;
-}
+/* Footer 非文字流光已关闭：只保留 .footer-slogan 文字本身的蓝色慢速流光 */
 
 /* =========================================================
    左侧导航小圆点
@@ -1836,28 +1795,45 @@ html[lang="en"] .hero-subtitle {
   width: 1920px !important;
   left: 0 !important;
   text-align: center !important;
-  transform: none !important;
   padding: 0 625px 0 595px;
   box-sizing: border-box;
 }
 
-/* --- 英文：Stats 卡片间距拉开 + 一行标题 + 描述完全显示 --- */
+/* --- 英文：Stats 四列等宽等距，整体居中；长标题允许两行 --- */
+html[lang="en"] .hero-stats {
+  left: 0 !important;
+  width: 1920px !important;
+  justify-content: center;
+}
+html[lang="en"] .hero-stats-inner {
+  width: 1180px;
+  padding: 0;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 34px;
+}
 html[lang="en"] .hero-stats .stat-item {
-  padding: 0 50px;
+  padding: 0;
+  text-align: center;
 }
 html[lang="en"] .hero-stats .stat-title {
   font-family: 'Radikal', 'Space Grotesk', sans-serif;
   font-weight: 700;
-  white-space: nowrap;
+  white-space: normal;
+  max-width: 235px;
+  min-height: 54px;
+  margin: 0 auto 8px;
+  line-height: 1.18;
 }
 html[lang="en"] .hero-stats .stat-desc {
-  max-width: 220px;
+  max-width: 190px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 /* --- 英文：Scene1 左侧蓝色小标题加粗 --- */
 /* --- 英文：Scene2 Discord icon 左移避免遮挡标题 --- */
 html[lang="en"] .s2-3dicon {
-  left: 360px !important;
+  left: 170px !important;
 }
 
 /* --- 英文：Scene1 社媒管理左侧文案 --- */
@@ -1889,11 +1865,37 @@ html[lang="en"] .scene-title {
   letter-spacing: 0.1px;
 }
 
-/* --- 英文：Scene2 Tab 居中 --- */
+/* --- 英文：Scene1 / Scene2 Tab 居中 --- */
+html[lang="en"] #scene1 .scene-tabs {
+  left: 460px !important;
+  width: 960px !important;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0;
+  justify-items: center;
+  align-items: center;
+}
+html[lang="en"] #scene1 .scene-tabs .tab {
+  width: 100%;
+  text-align: center;
+  font-size: 15px;
+  padding-left: 0;
+  padding-right: 0;
+}
+html[lang="en"] #scene1 .scene-tabs .tab span {
+  display: inline-block;
+  max-width: 178px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+}
 html[lang="en"] #scene2 .scene-tabs {
-  left: 0 !important;
-  width: 1920px !important;
+  left: 50% !important;
+  width: auto !important;
+  transform: translateX(-50%);
   justify-content: center;
+  gap: 54px;
+  white-space: nowrap;
 }
 
 /* --- 英文：Scene4 / Scene5 标题居中 --- */
