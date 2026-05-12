@@ -163,8 +163,8 @@ const attachStagger = () => {
     { selector: '#scene2 .s2-card', step: 120 },
     // Scene4 私信营销 9 平台卡片
     { selector: '#scene4 .s4-plat', step: 70 },
-    // Scene5 合作游戏 整图渐入
-    { selector: '#scene5 .games-wall-img', step: 0 },
+    // Scene5 合作游戏 卡片交错入场（由 CSS transition-delay 控制）
+    // { selector: '#scene5 .games-grid .game-card', step: 0 },
     // Scene1 标题下平台 logo 条
     { selector: '#scene1 .s1-plat-bar img', step: 80 },
     // Scene3 左侧特性列表
