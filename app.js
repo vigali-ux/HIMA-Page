@@ -661,7 +661,7 @@ function switchLang(lang) {
 
   // 更新语言按钮标签
   const label = document.getElementById('langLabel');
-  if (label) label.textContent = lang === 'zh' ? '英文' : 'CN';
+  if (label) label.textContent = lang === 'zh' ? 'English' : '中文';
 
   // 更新 html lang 属性
   document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
