@@ -241,7 +241,7 @@ html[lang="zh-CN"] .nav-menu {
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   color: #11131b;
   cursor: pointer;
@@ -1799,10 +1799,10 @@ html[lang="en"] .nav-menu {
   gap: 40px;
 }
 
-/* --- 英文：CN 放大一号与地球 icon 完全对齐 --- */
+/* --- 英文：「中文」字号微调 --- */
 html[lang="en"] .nav-lang span {
-  font-size: 16px;
-  font-weight: 400;
+  font-size: 14px;
+  font-weight: 600;
   position: relative;
   top: 1px;
 }
