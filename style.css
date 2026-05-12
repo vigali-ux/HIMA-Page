@@ -1682,18 +1682,6 @@ html[lang="en"] .footer-slogan {
   color: rgba(255,255,255,.55);
   z-index: 2;
 }
-.footer-links {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  margin-bottom: 22px;
-  font-size: 13px;
-  color: rgba(255,255,255,.75);
-}
-.footer-links a { cursor: pointer; transition: color .2s; }
-.footer-links a:hover { color: #fff; }
-.footer-links .sep { color: rgba(255,255,255,.2); }
 .footer-company { line-height: 1.9; margin-bottom: 32px; }
 .footer-copyright {
   font-size: 14px;
