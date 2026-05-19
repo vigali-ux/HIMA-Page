@@ -233,7 +233,7 @@ html[lang="zh-CN"] .nav-menu {
 .nav-right {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 10px;
 }
 
 /* Language */
@@ -245,6 +245,7 @@ html[lang="zh-CN"] .nav-menu {
   font-weight: 500;
   color: #11131b;
   cursor: pointer;
+  margin-right: 10px;
   transition: color .32s ease;
 }
 .hero-nav.is-scrolled .nav-lang {
@@ -262,10 +263,9 @@ html[lang="zh-CN"] .nav-menu {
   color: #0165F2;
 }
 
-/* 合作咨询按钮（蓝底白字） */
+/* 导航按钮通用 */
 .nav-cta {
   padding: 10px 24px;
-  background: #0165F2;
   color: #ffffff;
   border-radius: 6px;
   font-size: 14px;
@@ -273,10 +273,23 @@ html[lang="zh-CN"] .nav-menu {
   white-space: nowrap;
   transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
 }
-.nav-cta:hover {
+/* 工作台 - 蓝色底 */
+.nav-cta-primary {
+  background: #0165F2;
+}
+.nav-cta-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 14px 30px -10px rgba(1,101,242,.45);
   background: #0052d4;
+}
+/* 合作咨询 - 黑色底 */
+.nav-cta-dark {
+  background: #1a1a1a;
+}
+.nav-cta-dark:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px -10px rgba(0,0,0,.35);
+  background: #333;
 }
 
 /* =========================================================
